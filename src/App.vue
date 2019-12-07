@@ -1,19 +1,95 @@
-<template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+<template lang="pug">
+  div#app
+    v-app#inspire
+      v-navigation-drawer(v-model='drawer' app clipped)
+        v-list(dense)
+          v-list-item(@click="goto('/')")
+            v-list-item-action
+              v-icon music_note
+            v-list-item-content
+              v-list-item-title Songs
+          v-list-group(prepend-icon="stars")
+            template(v-slot:activator)
+              v-list-item-title Star Mixing
+            v-list-item(@click="goto('/stage/star/1')")
+              v-list-item-title Stage 1
+            v-list-item(@click="goto('/stage/star/2')")
+              v-list-item-title Stage 2
+            v-list-item(@click="goto('/stage/star/3')")
+              v-list-item-title Stage 3
+          v-list-group(prepend-icon="album")
+            template(v-slot:activator)
+              v-list-item-title Pop Mixing
+            v-list-item(@click="goto('/stage/pop/1')")
+              v-list-item-title Stage 1
+            v-list-item(@click="goto('/stage/pop/2')")
+              v-list-item-title Stage 2
+            v-list-item(@click="goto('/stage/pop/3')")
+              v-list-item-title Stage 3
+          v-list-item(@click="goto('/settings')")
+            v-list-item-action
+              v-icon settings
+            v-list-item-content
+              v-list-item-title Settings
+      v-app-bar(app clipped-left color="blue darken-2")
+        v-app-bar-nav-icon(@click.stop='drawer = !drawer')
+        v-toolbar-title DJMAX TECHNIKA 2 Tool
+      v-content
+        router-view
+      v-footer(app)
+        span © {{ new Date().getFullYear() }} Made with ❤ by Kento
+      v-overlay.text-center(:value='overlay')
+        v-progress-circular(:size='50' color='primary' indeterminate)
+        br
+        | LOADING
 </template>
 
-<style lang="stylus">
-#app
-  font-family 'Avenir', Helvetica, Arial, sans-serif
-  -webkit-font-smoothing antialiased
-  -moz-osx-font-smoothing grayscale
-  text-align center
-  color #2c3e50
-  margin-top 60px
-</style>
+<script>
+import { eventBus } from './main.js'
+export default {
+  name: 'App',
+  data () {
+    return {
+      drawer: null,
+      overlay: false
+    }
+  },
+  computed: {
+    path () {
+      return this.$store.getters.settings.path
+    }
+  },
+  methods: {
+    goto (page) {
+      if (this.$router.currentRoute.path !== page) this.$router.push(page)
+    },
+    init () {
+      this.overlay = true
+      this.axios.post('http://localhost:616/init', { path: this.path })
+        .then((res) => {
+          if (res.data.success === true) {
+            this.$store.commit('initSongs', res.data.songs)
+            this.$store.commit('initStages', res.data.stage)
+          } else {
+            this.$swal({ type: 'error', title: 'Error', text: res.data.msg })
+          }
+          this.overlay = false
+        }).catch((err) => {
+          this.$swal({ type: 'error', title: 'Error', text: err })
+          this.overlay = false
+        })
+    }
+  },
+  mounted () {
+    const settings = localStorage.getItem('settings')
+    if (settings !== null) {
+      const settingsJSON = JSON.parse(settings)
+      this.$store.commit('init', settingsJSON)
+      this.init()
+    }
+    eventBus.$on('init', () => {
+      this.init()
+    })
+  }
+}
+</script>
