@@ -15,3 +15,10 @@ A tool to manage cracked DJMAX TECHNIKA 2
 2. Run `yarn`.
 3. Run `yarn elec-serve` to run.
 4. Run `yarn elec-build` to build.
+
+## Change log
+### 1.0
+- Release.
+### 1.1
+- Fix reset file path.
+- Dark style scrollbar.
