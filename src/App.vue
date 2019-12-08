@@ -8,24 +8,32 @@
               v-icon music_note
             v-list-item-content
               v-list-item-title Songs
-          v-list-group(prepend-icon="stars")
+          v-list-group(prepend-icon="stars" no-action)
             template(v-slot:activator)
-              v-list-item-title Star Mixing
+              v-list-item-content
+                v-list-item-title Star Mixing
             v-list-item(@click="goto('/stage/star/1')")
-              v-list-item-title Stage 1
+              v-list-item-content
+                v-list-item-title Stage 1
             v-list-item(@click="goto('/stage/star/2')")
-              v-list-item-title Stage 2
+              v-list-item-content
+                v-list-item-title Stage 2
             v-list-item(@click="goto('/stage/star/3')")
-              v-list-item-title Stage 3
-          v-list-group(prepend-icon="album")
+              v-list-item-content
+                v-list-item-title Stage 3
+          v-list-group(prepend-icon="album"  no-action)
             template(v-slot:activator)
-              v-list-item-title Pop Mixing
+              v-list-item-content
+                v-list-item-title POP Mixing
             v-list-item(@click="goto('/stage/pop/1')")
-              v-list-item-title Stage 1
+              v-list-item-content
+                v-list-item-title Stage 1
             v-list-item(@click="goto('/stage/pop/2')")
-              v-list-item-title Stage 2
+              v-list-item-content
+                v-list-item-title Stage 2
             v-list-item(@click="goto('/stage/pop/3')")
-              v-list-item-title Stage 3
+              v-list-item-content
+                v-list-item-title Stage 3
           v-list-item(@click="goto('/settings')")
             v-list-item-action
               v-icon settings
@@ -75,7 +83,10 @@ export default {
           }
           this.overlay = false
         }).catch((err) => {
-          this.$swal({ type: 'error', title: 'Error', text: err })
+          this.$swal({ type: 'error',
+            title: 'Error',
+            text: err
+          })
           this.overlay = false
         })
     }
