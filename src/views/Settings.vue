@@ -8,7 +8,7 @@
           v-text-field(:messages="['Select the folder where your client.exe is.']" v-model='path' label='Game path' required color="blue lighten-2" ref="path" @click="selectFolder()")
           br
           v-btn(color='green' @click="save()") Save
-          v-btn.mx-3(color='red' @click="reset()" v-if="path.length > 0") Reset Stages
+          v-btn.mx-3(color='red' @click="reset()" v-if="savedPath.length > 0") Reset Stages
 </template>
 
 <script>
@@ -20,6 +20,11 @@ export default {
   data () {
     return {
       path: ''
+    }
+  },
+  computed: {
+    savedPath () {
+      return this.$store.getters.settings.path
     }
   },
   methods: {
