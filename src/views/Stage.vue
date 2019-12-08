@@ -45,8 +45,7 @@
           v-container
             v-row
               v-col(cols="12")
-                //- v-select(:items='songs' label='Select A Song' item-text="FullName" item-value="name" v-model="dialog.songID" @change="refreshDialog()")
-                v-autocomplete(:items="songs" item-text="FullName" item-value="name" v-model="dialog.song" label='Song' @change="refreshDialog(dialog.song.name)")
+                v-autocomplete(:items="filteredSongs" item-text="FullName" item-value="name" v-model="dialog.song" label='Song' @change="refreshDialog(dialog.song.name)")
             div(v-if="mode === 'star'")
               v-row
                 v-col.yellow--text.lighten-1.align-self-center(cols="4")
@@ -150,9 +149,20 @@ export default {
     },
     songs () {
       return this.$store.getters.songs
+    },
+    filteredSongs () {
+      let a = this.songs.filter((s) => {
+        return !this.isLong(s['no'])
+      })
+      console.log(a)
+      return a
     }
   },
   methods: {
+    isLong (no) {
+      no = parseInt(no)
+      return no >= 108 && no <= 110
+    },
     getSongInfo (name) {
       return this.songs.filter((s) => { return s.name === name })[0]
     },
@@ -173,7 +183,6 @@ export default {
     },
     saveSlot () {
       let path = this.$store.getters.settings.path
-      this.axios.post('http://localhost:616/saveSlot', { path, slot: this.dialog, mode: this.mode, num: this.num, page: this.page })
         .then((res) => {
           if (res.data.success === true) {
             this.$swal({ type: 'success', title: 'Success' })
