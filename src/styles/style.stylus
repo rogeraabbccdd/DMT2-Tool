@@ -1,6 +1,12 @@
 .swal2-popup
   font-family "Roboto", sans-serif
 
+.swal2-confirm
+  background #4CAF50 !important
+
+.swal2-cancel
+  background #F44336 !important
+
 ::-webkit-scrollbar 
   height 12px
   width 14px
