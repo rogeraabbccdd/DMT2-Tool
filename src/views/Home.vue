@@ -6,13 +6,13 @@
           h1.white--text Songs
           hr
           v-row
-            v-col(cols='4' v-for="(s, idx) in songs" :key="idx" v-if="s['name'] !== 'motion'")
+            v-col(cols='4' v-for="(s, idx) in songs" :key="idx" v-if="s['no'] !== '39'")
               v-card
                 v-img.white--text.align-end(height='200px' :src="'./eyecatch/'+s['name']+'_1.jpg'" v-if="")
                 v-card-title {{ s['FullName'] }}
                 v-card-text.text--primary
-                  div STAR MIXING
-                  div.yellow--text.lighten-1 NM {{ s['Star_1'] }}
+                  div(v-if="!isLong(s['no'])") STAR MIXING
+                  div.yellow--text.lighten-1(v-if="!isLong(s['no'])") NM {{ s['Star_1'] }}
                   br
                   div POP MIXING
                   div
@@ -36,6 +36,12 @@ export default {
   computed: {
     songs () {
       return this.$store.getters.songs
+    }
+  },
+  methods: {
+    isLong (no) {
+      no = parseInt(no)
+      return no >= 108 && no <= 110
     }
   }
 }
