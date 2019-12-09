@@ -82,6 +82,7 @@ export default {
         .then((res) => {
           if (res.data.success === true) {
             let songs = res.data.songs
+            this.$store.commit('lastno', songs[songs.length - 1].no)
             songs.sort((a, b) => {
               return a.FullName.localeCompare(b.FullName)
             })

@@ -113,7 +113,9 @@ export default {
     },
     addSong () {
       if (this.$refs.form.validate()) {
-        if (this.dialog.mode === 'add') this.dialog.songNo = parseInt(this.songs[this.songs.length - 1].no) + 1
+        if (this.dialog.mode === 'add') {
+          this.dialog.songNo = this.$store.getters.lastno + 1
+        }
         this.axios.post('http://localhost:616/custom', this.dialog).then((res) => {
           if (res.data.success === true) {
             this.$swal({ type: 'success', title: 'Success' })

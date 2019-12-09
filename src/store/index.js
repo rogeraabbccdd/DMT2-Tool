@@ -9,7 +9,8 @@ export default new Vuex.Store({
       path: ''
     },
     songs: [],
-    stages: []
+    stages: [],
+    lastno: 0
   },
   mutations: {
     init (state, data) {
@@ -24,6 +25,9 @@ export default new Vuex.Store({
     saveState (state, data) {
       state.settings[data.type] = data.value
       localStorage.setItem('settings', JSON.stringify(state.settings))
+    },
+    lastno (state, data) {
+      state.lastno = parseInt(data)
     }
   },
   getters: {
@@ -35,6 +39,9 @@ export default new Vuex.Store({
     },
     songs (state) {
       return state.songs
+    },
+    lastno (state) {
+      return state.lastno
     }
   }
 })
