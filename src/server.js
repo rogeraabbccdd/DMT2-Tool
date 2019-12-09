@@ -148,6 +148,61 @@ const updateSlot = async (file, slot, page) => {
   return msg
 }
 
+const addSong = async (data) => {
+  let msg = ''
+  try {
+    let songs = []
+    const exists = await fse.pathExists(userPath + gameFilePath + gameFileDisc)
+    if (exists === false) {
+      const err = `Can't find songs list file in game folder`
+      throw err
+    }
+    const discStreeam = fs.createReadStream(userPath + gameFilePath + gameFileDisc, 'utf16le')
+      .pipe(csv.parse({ delimiter: '\t', headers: false, quote: '\'', escape: '\\', ignoreEmpty: true }))
+      .on('data', (data) => {
+        songs.push(data)
+      })
+
+    await once(discStreeam, 'finish', async () => {
+      await fs.unlink(userPath + gameFilePath + gameFileDisc, (err) => {
+        if (err) throw err
+      })
+    })
+
+    data.loopBga = parseInt(data.loopBga) === 0 ? 'FALSE' : 'TRUE'
+
+    let write = [
+      data.songNo,
+      data.name,
+      data.FullName,
+      data.Genre,
+      data.Composer,
+      0, 0, 0,
+      data.loopBga,
+      0, 0, 0, 0,
+      data.Star_1, 0, 0, 0,
+      data.Pop_1,
+      data.Pop_2,
+      data.Pop_3,
+      0
+    ]
+    songs.push(write)
+
+    const writeStream = fs.createWriteStream(userPath + gameFilePath + gameFileDisc, { flag: 'w', encoding: 'utf16le' })
+    for await (let s of songs) {
+      let w = ''
+      for (let ss of s) {
+        w += ss + '\t'
+      }
+      writeStream.write(w + '\n')
+    }
+    writeStream.end()
+  } catch (err) {
+    msg = err
+  }
+  return msg
+}
+
 // init
 server.post('/init', async (req, res) => {
   let success = false
@@ -217,4 +272,31 @@ server.get('/reset', async (req, res) => {
     userPath = ''
     res.json({ success: false, msg: `Can't find CLIENT.EXE in selected folder` })
   }
+})
+
+server.post('/custom', async (req, res) => {
+  let data = req.body
+  let success = false
+  let msg = ''
+  if (data.mode === 'add') {
+    await addSong(data).then((res) => {
+      console.log(res)
+      if (res === '') {
+        success = true
+      } else {
+        msg = res
+      }
+    }).catch((err) => {
+      console.log(err)
+      msg = err
+    })
+  }
+  res.json({ success, msg })
+})
+
+server.get('/customImg', async (req, res) => {
+  let file = userPath + '/Resource/eyecatch/song/' + req.query.name + '_0.jpg'
+  const exists = await fse.pathExists(file)
+  if (exists === true) res.sendFile(file)
+  else res.sendStatus(404)
 })

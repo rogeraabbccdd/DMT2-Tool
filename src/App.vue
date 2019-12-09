@@ -3,11 +3,16 @@
     v-app#inspire
       v-navigation-drawer(v-model='drawer' app clipped)
         v-list(dense)
-          v-list-item(@click="goto('/')")
-            v-list-item-action
-              v-icon music_note
-            v-list-item-content
-              v-list-item-title Songs
+          v-list-group(prepend-icon="music_note" no-action)
+            template(v-slot:activator)
+              v-list-item-content
+                v-list-item-title Songs
+            v-list-item(@click="goto('/')")
+              v-list-item-content
+                v-list-item-title Songs
+            v-list-item(@click="goto('/custom')")
+              v-list-item-content
+                v-list-item-title Custom Songs
           v-list-group(prepend-icon="stars" no-action)
             template(v-slot:activator)
               v-list-item-content

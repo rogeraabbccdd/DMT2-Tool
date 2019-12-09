@@ -1,6 +1,6 @@
 <template lang="pug">
   div.stage
-    v-container(fill-height v-if="stages.length > 0")
+    v-container(fill-height v-if="stages.length > 0 && songs.length > 0")
       v-row(:justify="'center'")
         v-col(cols="10")
           h1.white--text {{ mode.toUpperCase() }} MIXING Stage {{ num }}
@@ -9,7 +9,9 @@
           v-row
             v-col(cols='4' v-for="(s, idx) in stages" :key="idx")
               v-card
-                v-img.white--text.align-end(height='200px' :src="'./eyecatch/'+s[1]+'_1.jpg'")
+                v-img.white--text.align-end(height='200px' :src="getEyecatchUrl(s)")
+                  template(v-slot:placeholder)
+                    v-img.white--text.align-end(height='200px' :src="'./eyecatch/placeholder.jpg'")
                 v-card-text.text--primary
                   div {{ s[14] }}
                   div(v-if="mode === 'star'")
@@ -45,7 +47,7 @@
           v-container
             v-row
               v-col(cols="12")
-                v-autocomplete(:items="filteredSongs" item-text="FullName" item-value="name" v-model="dialog.song" label='Song' @change="refreshDialog(dialog.song.name)")
+                v-autocomplete(:items="filteredSongs" item-text="FullName" item-value="no" v-model="dialog.songId" label='Song' @change="refreshDialog()")
             div(v-if="mode === 'star'")
               v-row
                 v-col.yellow--text.lighten-1.align-self-center(cols="4")
@@ -167,6 +169,9 @@ export default {
     },
     getSongInfo (no) {
       return this.songs.filter((s) => { return s.no === no })[0]
+    },
+    getEyecatchUrl (s) {
+      return s[0] <= 115 ? './eyecatch/' + s[1] + '_1.jpg' : 'http://localhost:616/customImg?name=' + s[1]
     },
     edit (s, idx) {
       this.dialog.song = {
