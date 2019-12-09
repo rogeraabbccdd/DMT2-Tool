@@ -148,7 +148,7 @@ const updateSlot = async (file, slot, page) => {
   return msg
 }
 
-const addSong = async (data) => {
+const customSong = async (data) => {
   let msg = ''
   try {
     let songs = []
@@ -170,23 +170,44 @@ const addSong = async (data) => {
     })
 
     data.loopBga = parseInt(data.loopBga) === 0 ? 'FALSE' : 'TRUE'
-
-    let write = [
-      data.songNo,
-      data.name,
-      data.FullName,
-      data.Genre,
-      data.Composer,
-      0, 0, 0,
-      data.loopBga,
-      0, 0, 0, 0,
-      data.Star_1, 0, 0, 0,
-      data.Pop_1,
-      data.Pop_2,
-      data.Pop_3,
-      0
-    ]
-    songs.push(write)
+    if (data.mode === 'add') {
+      let write = [
+        data.songNo,
+        data.name,
+        data.FullName,
+        data.Genre,
+        data.Composer,
+        0, 0, 0,
+        data.loopBga,
+        0, 0, 0, 0,
+        data.Star_1, 0, 0, 0,
+        data.Pop_1,
+        data.Pop_2,
+        data.Pop_3,
+        0
+      ]
+      songs.push(write)
+    } else {
+      const idx = await songs.findIndex((s) => {
+        return s[0] === data.songNo
+      })
+      console.log(idx)
+      songs[idx] = [
+        data.songNo,
+        data.name,
+        data.FullName,
+        data.Genre,
+        data.Composer,
+        0, 0, 0,
+        data.loopBga,
+        0, 0, 0, 0,
+        data.Star_1, 0, 0, 0,
+        data.Pop_1,
+        data.Pop_2,
+        data.Pop_3,
+        0
+      ]
+    }
 
     const writeStream = fs.createWriteStream(userPath + gameFilePath + gameFileDisc, { flag: 'w', encoding: 'utf16le' })
     for await (let s of songs) {
@@ -278,19 +299,19 @@ server.post('/custom', async (req, res) => {
   let data = req.body
   let success = false
   let msg = ''
-  if (data.mode === 'add') {
-    await addSong(data).then((res) => {
-      console.log(res)
-      if (res === '') {
-        success = true
-      } else {
-        msg = res
-      }
-    }).catch((err) => {
-      console.log(err)
-      msg = err
-    })
-  }
+  console.log(data)
+  await customSong(data).then((res) => {
+    console.log(res)
+    if (res === '') {
+      success = true
+    } else {
+      msg = res
+    }
+  }).catch((err) => {
+    console.log(err)
+    msg = err
+  })
+
   res.json({ success, msg })
 })
 

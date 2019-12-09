@@ -21,6 +21,8 @@
                     span.blue--text(v-if="s['Pop_2'] > 0") HD {{ s['Pop_2'] }}
                     span(v-if="s['Pop_3'] > 0") &emsp;/&emsp;
                     span.red--text(v-if="s['Pop_3'] > 0") MX {{ s['Pop_3'] }}
+                v-btn.btn-edit(absolute icon dark fab bottom right color='green' @click="edit(s)")
+                  v-icon edit
     v-container(fill-height v-else)
       v-row(:justify="'center'")
         v-col(cols="10")
@@ -31,7 +33,7 @@
             | &nbsp;
             a(href="#" @click="openExternal('https://github.com/rogeraabbccdd/DMT2-Songs')") here
             | .
-    v-btn(absolute dark fab bottom right color='pink' @click="dialog.show = true; dialog.mode = 'add'")
+    v-btn(absolute dark fab bottom right color='pink' @click="initDialog()")
       v-icon mdi-plus
     v-dialog(v-model='dialog.show' width='500')
       v-form(ref='form' v-model='dialog.valid')
@@ -122,6 +124,40 @@ export default {
         }).catch((err) => {
           this.$swal({ type: 'error', title: 'Error', text: err })
         })
+      }
+    },
+    edit (song) {
+      const loop = song.loopBga === 'FALSE' ? 0 : 1
+      this.dialog = {
+        mode: 'edit',
+        songNo: song.no,
+        valid: true,
+        show: true,
+        name: song.name,
+        FullName: song.FullName,
+        Genre: song.Genre,
+        Composer: song.Composer,
+        loopBga: loop,
+        Star_1: song.Star_1,
+        Pop_1: song.Pop_1,
+        Pop_2: song.Pop_2,
+        Pop_3: song.Pop_3
+      }
+    },
+    initDialog () {
+      this.dialog = {
+        mode: 'add',
+        songNo: 0,
+        show: true,
+        name: '',
+        FullName: '',
+        Genre: '',
+        Composer: '',
+        loopBga: 0,
+        Star_1: 0,
+        Pop_1: 0,
+        Pop_2: 0,
+        Pop_3: 0
       }
     }
   }
