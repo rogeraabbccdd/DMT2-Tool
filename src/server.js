@@ -144,7 +144,6 @@ const updateSlot = async (file, slot, page) => {
   } catch (err) {
     msg = err
   }
-  console.log(msg)
   return msg
 }
 
@@ -191,7 +190,6 @@ const customSong = async (data) => {
       const idx = await songs.findIndex((s) => {
         return s[0] === data.songNo
       })
-      console.log(idx)
       songs[idx] = [
         data.songNo,
         data.name,
@@ -299,16 +297,13 @@ server.post('/custom', async (req, res) => {
   let data = req.body
   let success = false
   let msg = ''
-  console.log(data)
   await customSong(data).then((res) => {
-    console.log(res)
     if (res === '') {
       success = true
     } else {
       msg = res
     }
   }).catch((err) => {
-    console.log(err)
     msg = err
   })
 
