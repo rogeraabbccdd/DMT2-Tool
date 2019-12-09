@@ -22,3 +22,11 @@ A tool to manage cracked DJMAX TECHNIKA 2
 ### 1.1
 - Fix reset file path.
 - Dark style scrollbar.
+### 1.2
+- Sort songs.
+- Add and edit custom songs.
+- Fix sidebar alignment.
+- Fix sweet alert color.
+- Remove extended song from song select option in edit slot form.
+- Remove star mixing difficulty of extended songs.
+- Validate path before every changes.
