@@ -156,7 +156,7 @@ export default {
       let a = this.songs.filter((s) => {
         let r = true
         if (this.isLong(s['no'])) r = false
-        if (this.mode === 'star' && parseInt(r['Star_1']) === '0') r = false
+        if (this.mode === 'star' && parseInt(s['Star_1']) === 0) r = false
         return r
       })
       return a
