@@ -35,6 +35,8 @@ const gameFileStages = {
   pop3: 'pop_stage_3.csv'
 }
 
+let userPath = ''
+
 // DMT2 is released in 2010/06/16 :)
 server.listen(616)
 
@@ -43,10 +45,10 @@ const validPath = async (rootpath) => {
   return exists
 }
 
-const readData = async (userpath) => {
+const readData = async () => {
   const songs = []
   const stage = []
-  const discStreeam = fs.createReadStream(userpath + gameFilePath + gameFileDisc, 'utf16le')
+  const discStreeam = fs.createReadStream(userPath + gameFilePath + gameFileDisc, 'utf16le')
     .pipe(csv.parse({ delimiter: '\t', headers: true, quote: '\'', escape: '\\', ignoreEmpty: true }))
     .on('data', (data) => {
       songs.push(data)
@@ -54,7 +56,7 @@ const readData = async (userpath) => {
   await once(discStreeam, 'end')
 
   for (let file in gameFileStages) {
-    const stageStream = fs.createReadStream(userpath + gameFilePath + gameFileStages[file])
+    const stageStream = fs.createReadStream(userPath + gameFilePath + gameFileStages[file])
       .pipe(csv.parse({ delimiter: ',', quote: '`', escape: '\\', ignoreEmpty: true }))
       .on('data', (data) => {
         if (!isNaN(parseInt(data[0]))) stage.push(data)
@@ -65,17 +67,17 @@ const readData = async (userpath) => {
   return { songs, stage }
 }
 
-const copyData = async (userpath, disc, stage) => {
-  let exists = await fse.pathExists(userpath + gameFilePath + gameFileDisc)
+const copyData = async (disc, stage) => {
+  let exists = await fse.pathExists(userPath + gameFilePath + gameFileDisc)
   if (!exists || disc === true) {
     const filepath = path.join(__static, gameFileDisc)
-    await fse.copy(filepath, userpath + gameFilePath + gameFileDisc, { overwrite: true })
+    await fse.copy(filepath, userPath + gameFilePath + gameFileDisc, { overwrite: true })
   }
   for (let file in gameFileStages) {
-    exists = await fse.pathExists(userpath + gameFilePath + gameFileStages[file])
+    exists = await fse.pathExists(userPath + gameFilePath + gameFileStages[file])
     if (!exists || stage === true) {
       const filepath = path.join(__static, gameFileStages[file])
-      await fse.copy(filepath, userpath + gameFilePath + gameFileStages[file], { overwrite: true })
+      await fse.copy(filepath, userPath + gameFilePath + gameFileStages[file], { overwrite: true })
     }
   }
 }
@@ -147,14 +149,19 @@ server.post('/init', async (req, res) => {
   let datapath = req.body.path
   let valid = await validPath(datapath)
   if (valid === true) {
-    await readData(datapath).then((data) => {
+    userPath = datapath
+    await readData().then((data) => {
       success = true
       songs = data.songs
       stage = data.stage
     }).catch((err) => {
       msg = err
     })
-  } else msg = `Can't find CLIENT.EXE in selected folder`
+  } else {
+    userPath = ''
+    msg = `Can't find CLIENT.EXE in selected folder`
+  }
+
   res.json({ success, msg, songs, stage })
 })
 
@@ -163,12 +170,13 @@ server.post('/saveSettings', async (req, res) => {
   let datapath = req.body.path
   let success = false
   let msg = ''
-
   let valid = await validPath(datapath)
   if (valid === true) {
-    await copyData(datapath, false, false)
+    userPath = datapath
+    await copyData(false, false)
     success = true
   } else {
+    userPath = ''
     msg = `Can't find CLIENT.EXE in selected folder`
   }
   res.json({ success, msg })
@@ -177,7 +185,7 @@ server.post('/saveSettings', async (req, res) => {
 server.post('/saveSlot', async (req, res) => {
   let slot = req.body.slot
   let page = req.body.page
-  let file = req.body.path + gameFilePath + req.body.mode + '_stage_' + req.body.num + '.csv'
+  let file = userPath + gameFilePath + req.body.mode + '_stage_' + req.body.num + '.csv'
   let success = false
   let msg = ''
   await updateSlot(file, slot, page).then((res) => {
@@ -192,11 +200,13 @@ server.post('/saveSlot', async (req, res) => {
   res.json({ success, msg })
 })
 
-server.post('/reset', async (req, res) => {
-  let datapath = req.body.path
-  let exist = await validPath(datapath)
+server.get('/reset', async (req, res) => {
+  let exist = await validPath(userPath)
   if (exist) {
-    await copyData(datapath, false, true)
+    await copyData(false, true)
     res.json({ success: true, msg: '' })
-  } else res.json({ success: false, msg: `Can't find CLIENT.EXE in selected folder` })
+  } else {
+    userPath = ''
+    res.json({ success: false, msg: `Can't find CLIENT.EXE in selected folder` })
+  }
 })

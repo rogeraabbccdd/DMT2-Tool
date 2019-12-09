@@ -56,12 +56,17 @@ export default {
       this.$swal({ type: 'warning', title: 'Are you sure?', text: 'All your stages will reset to default', showCancelButton: true })
         .then((e) => {
           if (e.value) {
-            this.axios.post('http://localhost:616/reset', { path: this.path })
+            this.axios.get('http://localhost:616/reset')
               .then((res) => {
                 if (res.data.success === true) {
                   eventBus.$emit('init')
                   this.$swal({ type: 'success', title: 'Success' })
+                } else {
+                  this.$swal({ type: 'error', title: 'Error', text: res.data.msg })
                 }
+              })
+              .catch((err) => {
+                this.$swal({ type: 'error', title: 'Error', text: err })
               })
           }
         })

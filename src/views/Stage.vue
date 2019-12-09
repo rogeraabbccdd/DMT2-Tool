@@ -154,7 +154,6 @@ export default {
       let a = this.songs.filter((s) => {
         return !this.isLong(s['no'])
       })
-      console.log(a)
       return a
     }
   },
@@ -182,7 +181,7 @@ export default {
       this.dialog.show = true
     },
     saveSlot () {
-      let path = this.$store.getters.settings.path
+      this.axios.post('http://localhost:616/saveSlot', { slot: this.dialog, mode: this.mode, num: this.num, page: this.page })
         .then((res) => {
           if (res.data.success === true) {
             this.$swal({ type: 'success', title: 'Success' })
