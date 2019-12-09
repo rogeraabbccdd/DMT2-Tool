@@ -48,12 +48,16 @@ const validPath = async (rootpath) => {
 const readData = async () => {
   const songs = []
   const stage = []
+  let exists = await fse.pathExists(userPath + gameFilePath + gameFileDisc)
+  if (exists === false) {
+    await copyData(true, true)
+  }
   const discStreeam = fs.createReadStream(userPath + gameFilePath + gameFileDisc, 'utf16le')
     .pipe(csv.parse({ delimiter: '\t', headers: true, quote: '\'', escape: '\\', ignoreEmpty: true }))
     .on('data', (data) => {
       songs.push(data)
     })
-  await once(discStreeam, 'end')
+  await once(discStreeam, 'finish')
 
   for (let file in gameFileStages) {
     const stageStream = fs.createReadStream(userPath + gameFilePath + gameFileStages[file])
@@ -62,20 +66,20 @@ const readData = async () => {
         if (!isNaN(parseInt(data[0]))) stage.push(data)
       })
 
-    await once(stageStream, 'end')
+    await once(stageStream, 'finish')
   }
   return { songs, stage }
 }
 
 const copyData = async (disc, stage) => {
   let exists = await fse.pathExists(userPath + gameFilePath + gameFileDisc)
-  if (!exists || disc === true) {
+  if (exists === false || disc === true) {
     const filepath = path.join(__static, gameFileDisc)
     await fse.copy(filepath, userPath + gameFilePath + gameFileDisc, { overwrite: true })
   }
   for (let file in gameFileStages) {
     exists = await fse.pathExists(userPath + gameFilePath + gameFileStages[file])
-    if (!exists || stage === true) {
+    if (exists === false || stage === true) {
       const filepath = path.join(__static, gameFileStages[file])
       await fse.copy(filepath, userPath + gameFilePath + gameFileStages[file], { overwrite: true })
     }
