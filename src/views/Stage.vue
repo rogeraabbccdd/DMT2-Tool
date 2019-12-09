@@ -137,7 +137,7 @@ export default {
     stages () {
       let result = this.$store.getters.stages({ from: this.from, to: this.to })
       result = result.map((r) => {
-        let info = this.getSongInfo(r[1])
+        let info = this.getSongInfo(r[0])
         r.push(info.FullName)
         r.push(info['Star_1'])
         r.push(info['Pop_1'])
@@ -152,7 +152,10 @@ export default {
     },
     filteredSongs () {
       let a = this.songs.filter((s) => {
-        return !this.isLong(s['no'])
+        let r = true
+        if (this.isLong(s['no'])) r = false
+        if (this.mode === 'star' && parseInt(r['Star_1']) === '0') r = false
+        return r
       })
       return a
     }
@@ -162,13 +165,13 @@ export default {
       no = parseInt(no)
       return no >= 108 && no <= 110
     },
-    getSongInfo (name) {
-      return this.songs.filter((s) => { return s.name === name })[0]
+    getSongInfo (no) {
+      return this.songs.filter((s) => { return s.no === no })[0]
     },
     edit (s, idx) {
       this.dialog.song = {
-        FullName: this.getSongInfo(s[1]).FullName,
-        name: this.getSongInfo(s[1]).name
+        FullName: this.getSongInfo(s[0]).FullName,
+        name: this.getSongInfo(s[0]).name
       }
       this.dialog.slotNum = idx
       this.dialog.songId = s[0]
@@ -197,7 +200,7 @@ export default {
       this.dialog.NM.speed = { text: '1', value: 2 }
       this.dialog.HD.speed = { text: '1', value: 2 }
       this.dialog.MX.speed = { text: '1', value: 2 }
-      let info = this.getSongInfo(this.dialog.song)
+      let info = this.getSongInfo(this.dialog.songId)
       this.dialog.songId = info.no
       this.dialog.NM.level = (this.mode === 'star') ? info['Star_1'] : info['Pop_1']
       this.dialog.HD.level = info['Pop_2']
