@@ -100,7 +100,11 @@ const updateSlot = async (file, slot, page) => {
       .on('data', (data) => {
         stage.push(data)
       })
-    await once(readStream, 'end')
+    await once(readStream, 'finish', async () => {
+      await fs.unlink(userPath + gameFilePath + gameFileStages[file], (err) => {
+        if (err) throw err
+      })
+    })
 
     let index = (page - 1) * 9 + slot.slotNum + 1
     stage[index] = [
