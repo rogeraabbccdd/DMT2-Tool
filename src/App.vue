@@ -76,17 +76,18 @@ export default {
       this.axios.post('http://localhost:616/init', { path: this.path })
         .then((res) => {
           if (res.data.success === true) {
-            this.$store.commit('initSongs', res.data.songs)
+            let songs = res.data.songs
+            songs.sort((a, b) => {
+              return a.FullName.localeCompare(b.FullName)
+            })
+            this.$store.commit('initSongs', songs)
             this.$store.commit('initStages', res.data.stage)
           } else {
             this.$swal({ type: 'error', title: 'Error', text: res.data.msg })
           }
           this.overlay = false
         }).catch((err) => {
-          this.$swal({ type: 'error',
-            title: 'Error',
-            text: err
-          })
+          this.$swal({ type: 'error', title: 'Error', text: err })
           this.overlay = false
         })
     }
