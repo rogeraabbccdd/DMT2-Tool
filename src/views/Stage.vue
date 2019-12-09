@@ -2,7 +2,7 @@
   div.stage
     v-container(fill-height v-if="stages.length > 0 && songs.length > 0")
       v-row(:justify="'center'")
-        v-col(cols="10")
+        v-col(cols="12" md="10")
           h1.white--text {{ mode.toUpperCase() }} MIXING Stage {{ num }}
           hr
           br
@@ -16,7 +16,7 @@
                   div {{ s[14] }}
                   div(v-if="mode === 'star'")
                     div.yellow--text.lighten-1
-                      | NM {{ s[15] }} / Speed: {{ s[2] / 2 }}x
+                      | Star {{ s[15] }} / Speed: {{ s[2] / 2 }}x
                   div(v-else)
                     div.yellow--text.lighten-1
                       | NM {{ s[16] }} / Speed: {{ s[2] / 2 }}x
@@ -147,6 +147,7 @@ export default {
         r.push(info['Pop_3'])
         return r
       })
+      console.log(result)
       return result
     },
     songs () {
