@@ -201,7 +201,7 @@ export default {
       this.dialog.HD.speed = { text: '1', value: 2 }
       this.dialog.MX.speed = { text: '1', value: 2 }
       let info = this.getSongInfo(this.dialog.songId)
-      this.dialog.songId = info.no
+      this.dialog.song = info.name
       this.dialog.NM.level = (this.mode === 'star') ? info['Star_1'] : info['Pop_1']
       this.dialog.HD.level = info['Pop_2']
       this.dialog.MX.level = info['Pop_3']
