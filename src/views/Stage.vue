@@ -147,7 +147,6 @@ export default {
         r.push(info['Pop_3'])
         return r
       })
-      console.log(result)
       return result
     },
     songs () {

@@ -30,3 +30,6 @@ A tool to manage cracked DJMAX TECHNIKA 2
 - Remove extended song from song select option in edit slot form.
 - Remove star mixing difficulty of extended songs.
 - Validate path before every changes.
+### 1.2.1
+- Fix a bug that songs without star difficulty appear in songs list in slot edit.
+- Fix wrong number when adding new custom song.
