@@ -12,7 +12,14 @@
                 v-card-title {{ s['FullName'] }}
                 v-card-text.text--primary
                   div(v-if="!isLong(s['no'])") STAR MIXING
-                  div.yellow--text.lighten-1(v-if="!isLong(s['no'])") NM {{ s['Star_1'] }}
+                  div
+                    span.yellow--text.lighten-1 NM {{ s['Star_1'] }}
+                    span(v-if="s['Star_2'] > 0") &emsp;/&emsp;
+                    span.blue--text(v-if="s['Star_2'] > 0") HD {{ s['Star_2'] }}
+                    span(v-if="s['Star_3'] > 0") &emsp;/&emsp;
+                    span.red--text(v-if="s['Star_3'] > 0") MX {{ s['Star_3'] }}
+                    span(v-if="s['Star_4'] > 0") &emsp;/&emsp;
+                    span.purple--text.text--lighten-3(v-if="s['Star_4'] > 0") EX {{ s['Star_4'] }}
                   br
                   div POP MIXING
                   div
@@ -21,6 +28,8 @@
                     span.blue--text(v-if="s['Pop_2'] > 0") HD {{ s['Pop_2'] }}
                     span(v-if="s['Pop_3'] > 0") &emsp;/&emsp;
                     span.red--text(v-if="s['Pop_3'] > 0") MX {{ s['Pop_3'] }}
+                    span(v-if="s['Pop_4'] > 0") &emsp;/&emsp;
+                    span.purple--text.text--lighten-3(v-if="s['Pop_4'] > 0") EX {{ s['Pop_4'] }}
     v-container(fill-height v-else)
       v-row(:justify="'center'")
         v-col(cols="10")

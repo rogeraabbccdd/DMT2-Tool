@@ -108,7 +108,7 @@ const updateSlot = async (file, slot, page) => {
 
     let index = (page - 1) * 9 + slot.slotNum + 1
     stage[index] = [
-      slot.songId, slot.song,
+      slot.songId, slot.song.name,
       slot.NM.speed.value, 1, 0
     ]
 
@@ -132,9 +132,15 @@ const updateSlot = async (file, slot, page) => {
       stage[index].push(0)
     }
 
-    stage[index].push(0)
-    stage[index].push(0)
-    stage[index].push(0)
+    if (slot.EX.level > 0) {
+      stage[index].push(slot.EX.speed.value)
+      stage[index].push(4)
+      stage[index].push(0)
+    } else {
+      stage[index].push(0)
+      stage[index].push(0)
+      stage[index].push(0)
+    }
 
     const writeStream = fs.createWriteStream(file, { flag: 'w' })
     for await (let s of stage) {
@@ -179,11 +185,14 @@ const customSong = async (data) => {
         0, 0, 0,
         data.loopBga,
         0, 0, 0, 0,
-        data.Star_1, 0, 0, 0,
+        data.Star_1,
+        data.Star_2,
+        data.Star_3,
+        data.Star_4,
         data.Pop_1,
         data.Pop_2,
         data.Pop_3,
-        0
+        data.Pop_4
       ]
       songs.push(write)
     } else {
@@ -199,11 +208,14 @@ const customSong = async (data) => {
         0, 0, 0,
         data.loopBga,
         0, 0, 0, 0,
-        data.Star_1, 0, 0, 0,
+        data.Star_1,
+        data.Star_2,
+        data.Star_3,
+        data.Star_4,
         data.Pop_1,
         data.Pop_2,
         data.Pop_3,
-        0
+        data.Pop_4
       ]
     }
 

@@ -11,8 +11,15 @@
                 v-img.white--text.align-end(height='200px' :src="'http://localhost:616/customImg?name=' + s['name']")
                 v-card-title {{ s['FullName'] }}
                 v-card-text.text--primary
-                  div(v-if="parseInt(s['Star_1']) > 0") STAR MIXING
-                  div.yellow--text.lighten-1(v-if="parseInt(s['Star_1']) > 0") NM {{ s['Star_1'] }}
+                  div(v-if="s['Star_1'] > 0 || s['Star_2'] > 0 || s['Star_3'] > 0 || s['Star_4'] > 0") STAR MIXING
+                  div
+                    span.yellow--text.lighten-1(v-if="s['Star_1'] > 0") NM {{ s['Star_1'] }}
+                    span(v-if="s['Star_2'] > 0") &emsp;/&emsp;
+                    span.blue--text(v-if="s['Star_2'] > 0") HD {{ s['Star_2'] }}
+                    span(v-if="s['Star_3'] > 0") &emsp;/&emsp;
+                    span.red--text(v-if="s['Star_3'] > 0") MX {{ s['Star_3'] }}
+                    span(v-if="s['Star_4'] > 0") &emsp;/&emsp;
+                    span.purple--text.text--lighten-3(v-if="s['Star_4'] > 0") EX {{ s['Star_4'] }}
                   br
                   div POP MIXING
                   div
@@ -21,6 +28,8 @@
                     span.blue--text(v-if="s['Pop_2'] > 0") HD {{ s['Pop_2'] }}
                     span(v-if="s['Pop_3'] > 0") &emsp;/&emsp;
                     span.red--text(v-if="s['Pop_3'] > 0") MX {{ s['Pop_3'] }}
+                    span(v-if="s['Pop_4'] > 0") &emsp;/&emsp;
+                    span.purple--text.text--lighten-3(v-if="s['Pop_4'] > 0") EX {{ s['Pop_4'] }}
                 v-btn.btn-edit(absolute icon dark fab bottom right color='green' @click="edit(s)")
                   v-icon edit
     v-container(fill-height v-else)
@@ -33,7 +42,7 @@
             | &nbsp;
             a(href="#" @click="openExternal('https://github.com/rogeraabbccdd/DMT2-Songs')") here
             | .
-    v-btn(absolute dark fab bottom right color='pink' @click="initDialog()")
+    v-btn.btn-add(fixed dark fab bottom right color='pink' @click="initDialog()")
       v-icon mdi-plus
     v-dialog(v-model='dialog.show' width='500')
       v-form(ref='form' v-model='dialog.valid')
@@ -54,13 +63,21 @@
                   br
                   v-switch(v-model='dialog.loopBga' label='Loop BGA')
                   br
-                  v-text-field(v-model='dialog.Star_1' label='STAR difficulty' :messages="[`0 if doesn't exists`]" type='number' :rules="[v => !!v || 'Required']")
+                  v-text-field(v-model='dialog.Star_1' label='STAR NM difficulty' :messages="[`0 if doesn't exists`]" type='number' :rules="[v => !!v || 'Required']")
                   br
-                  v-text-field(v-model='dialog.Pop_1' label='NM difficulty' :messages="[`0 if doesn't exists`]" type='number' :rules="[v => !!v || 'Required']")
+                  v-text-field(v-model='dialog.Star_2' label='STAR HD difficulty' :messages="[`0 if doesn't exists`]" type='number' :rules="[v => !!v || 'Required']")
                   br
-                  v-text-field(v-model='dialog.Pop_2' label='HD difficulty' :messages="[`0 if doesn't exists`]" type='number' :rules="[v => !!v || 'Required']")
+                  v-text-field(v-model='dialog.Star_3' label='STAR MX difficulty' :messages="[`0 if doesn't exists`]" type='number' :rules="[v => !!v || 'Required']")
                   br
-                  v-text-field(v-model='dialog.Pop_3' label='MX difficulty' :messages="[`0 if doesn't exists`]" type='number' :rules="[v => !!v || 'Required']")
+                  v-text-field(v-model='dialog.Star_4' label='STAR EX difficulty' :messages="[`0 if doesn't exists`]" type='number' :rules="[v => !!v || 'Required']")
+                  br
+                  v-text-field(v-model='dialog.Pop_1' label='POP NM difficulty' :messages="[`0 if doesn't exists`]" type='number' :rules="[v => !!v || 'Required']")
+                  br
+                  v-text-field(v-model='dialog.Pop_2' label='POP HD difficulty' :messages="[`0 if doesn't exists`]" type='number' :rules="[v => !!v || 'Required']")
+                  br
+                  v-text-field(v-model='dialog.Pop_3' label='POP MX difficulty' :messages="[`0 if doesn't exists`]" type='number' :rules="[v => !!v || 'Required']")
+                  br
+                  v-text-field(v-model='dialog.Pop_4' label='POP EX difficulty' :messages="[`0 if doesn't exists`]" type='number' :rules="[v => !!v || 'Required']")
           v-divider
           v-card-actions
             v-spacer
@@ -87,9 +104,13 @@ export default {
         Composer: '',
         loopBga: 0,
         Star_1: 0,
+        Star_2: 0,
+        Star_3: 0,
+        Star_4: 0,
         Pop_1: 0,
         Pop_2: 0,
-        Pop_3: 0
+        Pop_3: 0,
+        Pop_4: 0
       }
     }
   },
@@ -141,9 +162,13 @@ export default {
         Composer: song.Composer,
         loopBga: loop,
         Star_1: song.Star_1,
+        Star_2: song.Star_2,
+        Star_3: song.Star_3,
+        Star_4: song.Star_4,
         Pop_1: song.Pop_1,
         Pop_2: song.Pop_2,
-        Pop_3: song.Pop_3
+        Pop_3: song.Pop_3,
+        Pop_4: song.Pop_4
       }
     },
     initDialog () {
@@ -157,9 +182,13 @@ export default {
         Composer: '',
         loopBga: 0,
         Star_1: 0,
+        Star_2: 0,
+        Star_3: 0,
+        Star_4: 0,
         Pop_1: 0,
         Pop_2: 0,
-        Pop_3: 0
+        Pop_3: 0,
+        Pop_4: 0
       }
     }
   }
