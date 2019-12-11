@@ -33,3 +33,6 @@ A tool to manage cracked DJMAX TECHNIKA 2
 ### 1.2.1
 - Fix a bug that songs without star difficulty appear in songs list in slot edit.
 - Fix wrong number when adding new custom song.
+### 1.3.0
+- All difficulties are open to edit in both mode now, including extra.
+- Fix bugs.
