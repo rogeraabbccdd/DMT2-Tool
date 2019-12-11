@@ -6,6 +6,7 @@ import {
   installVueDevtools
 } from 'vue-cli-plugin-electron-builder/lib'
 import path from 'path'
+import { autoUpdater } from 'electron-updater'
 import './server.js'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -33,6 +34,7 @@ const createWindow = () => {
     createProtocol('app')
     // Load the index.html when not in development
     win.loadURL('app://./index.html')
+    autoUpdater.checkForUpdatesAndNotify()
   }
 
   win.on('closed', () => {
