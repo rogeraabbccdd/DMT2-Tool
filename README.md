@@ -6,8 +6,8 @@ A tool to manage cracked DJMAX TECHNIKA 2
 ## Usage
 1. Download exe from [release page](https://github.com/rogeraabbccdd/DMT2-Tool/releases/latest).
 2. Install.
-3. Open Settings, set your game folder and save.
-4. Run reset stage button. **THIS IS IMPORTANT, I HAVE FORMATTED SONGS LIST FILE!**
+3. Delete your `discstock.csv` and `<mode>_stage_<num>.csv` in your `gamepaht/Resource/DiscInfo/`. **THIS IS IMPORTANT, I HAVE FORMATTED SONGS LIST FILE!**
+4. Open Settings, set your game folder and save.
 5. You can edit your song solots in stages.
 
 ## Build
