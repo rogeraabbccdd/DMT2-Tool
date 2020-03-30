@@ -36,3 +36,5 @@ A tool to manage cracked DJMAX TECHNIKA 2
 ### 1.3.0
 - All difficulties are open to edit in both mode now, including extra.
 - Fix bugs.
+### 1.3.1
+- Fix bugs.
