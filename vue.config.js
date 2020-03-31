@@ -5,7 +5,8 @@ module.exports = {
   pluginOptions: {
     electronBuilder: {
       builderOptions: {
-        publish: ['github']
+        publish: ['github'],
+        productName: 'DMT2 Tool'
       }
     }
   }
