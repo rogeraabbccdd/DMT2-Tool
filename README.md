@@ -42,3 +42,7 @@ A tool to manage cracked DJMAX TECHNIKA 2
 - Fix bugs.
 ### 1.3.2
 - Change app name to "DMT2 Tool"
+### 1.4.0
+- Add game settings, fullscreen, volume, show fps...etc.
+- Add version in footer.
+- Fix custom songs not added in game.
