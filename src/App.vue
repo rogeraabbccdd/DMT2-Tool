@@ -51,6 +51,8 @@
         router-view
       v-footer(app)
         span © {{ new Date().getFullYear() }} Made with ❤ by Kento
+        v-spacer
+        span 1.3.2
       v-overlay.text-center(:value='overlay')
         v-progress-circular(:size='50' color='primary' indeterminate)
         br
