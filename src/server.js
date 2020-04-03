@@ -24,16 +24,50 @@ server.use(cors({
   credentials: true
 }))
 
-const gameFilePath = 'Resource/DiscInfo/'
-const gameFileDisc = 'discstock.csv'
+const gameDiscInfoFolder = 'Resource/DiscInfo/'
+const gameFileDiscStock = 'discstock.csv'
 const gameFileStages = {
   star1: 'star_stage_1.csv',
   star2: 'star_stage_2.csv',
   star3: 'star_stage_3.csv',
   pop1: 'pop_stage_1.csv',
   pop2: 'pop_stage_2.csv',
-  pop3: 'pop_stage_3.csv'
+  pop3: 'pop_stage_3.csv',
+  starb: 'star_stage_bonus.csv',
+  popb: 'pop_stage_bonus.csv'
 }
+const gameFileClubs = [
+  'blackwhite.csv',
+  'challenger.csv',
+  'conqueror.csv',
+  'cottoncandy.csv',
+  'customizer.csv',
+  'djmaxidol.csv',
+  'duo_stage_1.csv',
+  'duo_stage_2.csv',
+  'ELECTROBEAT.csv',
+  'electroep.csv',
+  'firststep.csv',
+  'futurist.csv',
+  'GOLDENDISC.csv',
+  'heartbeat.csv',
+  'MAXIMUM.csv',
+  'nbrangernon.csv',
+  'Preview.csv',
+  'remixound.csv',
+  'sonoflong.csv',
+  'specialist.csv',
+  'specialist2.csv',
+  'SUPERSPEED.csv',
+  'SWEETSOUND.csv',
+  'thorlong.csv',
+  'UNPLUGGED.csv',
+  'ylong.csv'
+]
+
+const gamePakDiscInfoPak = 'Pack/DiscInfo.pak'
+const gamePakDiscInfoPakBackup = 'Pack/DiscInfo_backup.pak'
+const gameConfig = 'Resource/Config/setting.cfg'
 
 let userPath = ''
 
@@ -48,11 +82,11 @@ const validPath = async (rootpath) => {
 const readData = async () => {
   const songs = []
   const stage = []
-  let exists = await fse.pathExists(userPath + gameFilePath + gameFileDisc)
+  let exists = await fse.pathExists(userPath + gameDiscInfoFolder + gameFileDiscStock)
   if (exists === false) {
     await copyData(true, true)
   }
-  const discStreeam = fs.createReadStream(userPath + gameFilePath + gameFileDisc, 'utf16le')
+  const discStreeam = fs.createReadStream(userPath + gameDiscInfoFolder + gameFileDiscStock, 'utf16le')
     .pipe(csv.parse({ delimiter: '\t', headers: true, quote: '\'', escape: '\\', ignoreEmpty: true }))
     .on('data', (data) => {
       songs.push(data)
@@ -60,7 +94,7 @@ const readData = async () => {
   await once(discStreeam, 'finish')
 
   for (let file in gameFileStages) {
-    const stageStream = fs.createReadStream(userPath + gameFilePath + gameFileStages[file])
+    const stageStream = fs.createReadStream(userPath + gameDiscInfoFolder + gameFileStages[file])
       .pipe(csv.parse({ delimiter: ',', quote: '`', escape: '\\', ignoreEmpty: true }))
       .on('data', (data) => {
         if (!isNaN(parseInt(data[0]))) stage.push(data)
@@ -72,16 +106,27 @@ const readData = async () => {
 }
 
 const copyData = async (disc, stage) => {
-  let exists = await fse.pathExists(userPath + gameFilePath + gameFileDisc)
+  let exists = await fse.pathExists(userPath + gamePakDiscInfoPak)
+  if (exists === true) {
+    await fs.renameSync(userPath + gamePakDiscInfoPak, userPath + gamePakDiscInfoPakBackup)
+  }
+  for (let file of gameFileClubs) {
+    exists = await fse.pathExists(userPath + gameDiscInfoFolder + file)
+    if (exists === false) {
+      const filepath = path.join(__static, 'files/' + file)
+      await fse.copy(filepath, userPath + gameDiscInfoFolder + file, { overwrite: true })
+    }
+  }
+  exists = await fse.pathExists(userPath + gameDiscInfoFolder + gameFileDiscStock)
   if (exists === false || disc === true) {
-    const filepath = path.join(__static, gameFileDisc)
-    await fse.copy(filepath, userPath + gameFilePath + gameFileDisc, { overwrite: true })
+    const filepath = path.join(__static, 'files/' + gameFileDiscStock)
+    await fse.copy(filepath, userPath + gameDiscInfoFolder + gameFileDiscStock, { overwrite: true })
   }
   for (let file in gameFileStages) {
-    exists = await fse.pathExists(userPath + gameFilePath + gameFileStages[file])
+    exists = await fse.pathExists(userPath + gameDiscInfoFolder + gameFileStages[file])
     if (exists === false || stage === true) {
-      const filepath = path.join(__static, gameFileStages[file])
-      await fse.copy(filepath, userPath + gameFilePath + gameFileStages[file], { overwrite: true })
+      const filepath = path.join(__static, 'files/' + gameFileStages[file])
+      await fse.copy(filepath, userPath + gameDiscInfoFolder + gameFileStages[file], { overwrite: true })
     }
   }
 }
@@ -101,7 +146,7 @@ const updateSlot = async (file, slot, page) => {
         stage.push(data)
       })
     await once(readStream, 'finish', async () => {
-      await fs.unlink(userPath + gameFilePath + gameFileStages[file], (err) => {
+      await fs.unlink(userPath + gameDiscInfoFolder + gameFileStages[file], (err) => {
         if (err) throw err
       })
     })
@@ -157,19 +202,19 @@ const customSong = async (data) => {
   let msg = ''
   try {
     let songs = []
-    const exists = await fse.pathExists(userPath + gameFilePath + gameFileDisc)
+    const exists = await fse.pathExists(userPath + gameDiscInfoFolder + gameFileDiscStock)
     if (exists === false) {
       const err = `Can't find songs list file in game folder`
       throw err
     }
-    const discStreeam = fs.createReadStream(userPath + gameFilePath + gameFileDisc, 'utf16le')
+    const discStreeam = fs.createReadStream(userPath + gameDiscInfoFolder + gameFileDiscStock, 'utf16le')
       .pipe(csv.parse({ delimiter: '\t', headers: false, quote: '\'', escape: '\\', ignoreEmpty: true }))
       .on('data', (data) => {
         songs.push(data)
       })
 
     await once(discStreeam, 'finish', async () => {
-      await fs.unlink(userPath + gameFilePath + gameFileDisc, (err) => {
+      await fs.unlink(userPath + gameDiscInfoFolder + gameFileDiscStock, (err) => {
         if (err) throw err
       })
     })
@@ -219,7 +264,7 @@ const customSong = async (data) => {
       ]
     }
 
-    const writeStream = fs.createWriteStream(userPath + gameFilePath + gameFileDisc, { flag: 'w', encoding: 'utf16le' })
+    const writeStream = fs.createWriteStream(userPath + gameDiscInfoFolder + gameFileDiscStock, { flag: 'w', encoding: 'utf16le' })
     for await (let s of songs) {
       let w = ''
       for (let ss of s) {
@@ -279,7 +324,7 @@ server.post('/saveSettings', async (req, res) => {
 server.post('/saveSlot', async (req, res) => {
   let slot = req.body.slot
   let page = req.body.page
-  let file = userPath + gameFilePath + req.body.mode + '_stage_' + req.body.num + '.csv'
+  let file = userPath + gameDiscInfoFolder + req.body.mode + '_stage_' + req.body.num + '.csv'
   let success = false
   let msg = ''
   await updateSlot(file, slot, page).then((res) => {
