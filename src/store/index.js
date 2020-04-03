@@ -5,15 +5,26 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    settings: {
+    tool: {
       path: ''
+    },
+    settings: {
+      dev_mode: false,
+      fullscreen: false,
+      show_cursor: false,
+      vsync: false,
+      sfx_volume: 127,
+      bgm_volume: 127
     },
     songs: [],
     stages: [],
     lastno: 0
   },
   mutations: {
-    init (state, data) {
+    initTool (state, data) {
+      state.tool = data
+    },
+    initSettings (state, data) {
       state.settings = data
     },
     initSongs (state, data) {
@@ -22,15 +33,18 @@ export default new Vuex.Store({
     initStages (state, data) {
       state.stages = data
     },
-    saveState (state, data) {
+    saveTool (state, data) {
       state.settings[data.type] = data.value
-      localStorage.setItem('settings', JSON.stringify(state.settings))
+      localStorage.setItem('settings', JSON.stringify(state.tool))
     },
     lastno (state, data) {
       state.lastno = parseInt(data)
     }
   },
   getters: {
+    tool (state) {
+      return state.tool
+    },
     settings (state) {
       return state.settings
     },

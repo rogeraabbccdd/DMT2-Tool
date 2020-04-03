@@ -71,7 +71,7 @@ export default {
   },
   computed: {
     path () {
-      return this.$store.getters.settings.path
+      return this.$store.getters.tool.path
     }
   },
   methods: {
@@ -90,6 +90,7 @@ export default {
             })
             this.$store.commit('initSongs', songs)
             this.$store.commit('initStages', res.data.stage)
+            this.$store.commit('initSettings', res.data.settings)
           } else {
             this.$swal({ type: 'error', title: 'Error', text: res.data.msg })
           }
@@ -104,7 +105,7 @@ export default {
     const settings = localStorage.getItem('settings')
     if (settings !== null) {
       const settingsJSON = JSON.parse(settings)
-      this.$store.commit('init', settingsJSON)
+      this.$store.commit('initTool', settingsJSON)
       this.init()
     }
     eventBus.$on('init', () => {

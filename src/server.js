@@ -8,6 +8,7 @@ import fs from 'fs'
 import fse from 'fs-extra'
 import { once } from 'events'
 import path from 'path'
+import ini from 'ini'
 
 const server = express()
 
@@ -82,6 +83,7 @@ const validPath = async (rootpath) => {
 const readData = async () => {
   const songs = []
   const stage = []
+  const settings = {}
   let exists = await fse.pathExists(userPath + gameDiscInfoFolder + gameFileDiscStock)
   if (exists === false) {
     await copyData(true, true)
@@ -102,7 +104,16 @@ const readData = async () => {
 
     await once(stageStream, 'finish')
   }
-  return { songs, stage }
+
+  const config = ini.parse(fs.readFileSync(userPath + gameConfig, 'utf-8'))
+  settings.dev_mode = config.setting.dev_mode
+  settings.fullscreen = config.setting.fullscreen
+  settings.show_cursor = config.setting.show_cursor
+  settings.vsync = config.setting.vsync
+  settings.sfx_volume = config.setting.sfx_volume
+  settings.bgm_volume = config.setting.bgm_volume
+
+  return { songs, stage, settings }
 }
 
 const copyData = async (disc, stage) => {
@@ -193,7 +204,7 @@ const updateSlot = async (file, slot, page) => {
     }
     writeStream.end()
   } catch (err) {
-    msg = err
+    msg = err.message
   }
   return msg
 }
@@ -274,9 +285,20 @@ const customSong = async (data) => {
     }
     writeStream.end()
   } catch (err) {
-    msg = err
+    msg = err.message
   }
   return msg
+}
+
+const saveGames = async (data) => {
+  const config = ini.parse(fs.readFileSync(userPath + gameConfig, 'utf-8'))
+  config.setting.dev_mode = data.dev_mode
+  config.setting.fullscreen = data.fullscreen
+  config.setting.show_cursor = data.show_cursor
+  config.setting.vsync = data.vsync
+  config.setting.sfx_volume = data.sfx_volume
+  config.setting.bgm_volume = data.bgm_volume
+  fs.writeFileSync(userPath + gameConfig, ini.stringify(config))
 }
 
 // init
@@ -285,23 +307,25 @@ server.post('/init', async (req, res) => {
   let msg = ''
   let songs = []
   let stage = []
+  let settings = {}
   let datapath = req.body.path
-  let valid = await validPath(datapath)
+  const valid = await validPath(datapath)
   if (valid === true) {
     userPath = datapath
     await readData().then((data) => {
       success = true
       songs = data.songs
       stage = data.stage
+      settings = data.settings
     }).catch((err) => {
-      msg = err
+      msg = err.message
     })
   } else {
     userPath = ''
     msg = `Can't find CLIENT.EXE in selected folder`
   }
 
-  res.json({ success, msg, songs, stage })
+  res.json({ success, msg, songs, stage, settings })
 })
 
 // validate settings, check folder exist
@@ -309,7 +333,7 @@ server.post('/saveSettings', async (req, res) => {
   let datapath = req.body.path
   let success = false
   let msg = ''
-  let valid = await validPath(datapath)
+  const valid = await validPath(datapath)
   if (valid === true) {
     userPath = datapath
     await copyData(false, false)
@@ -334,13 +358,13 @@ server.post('/saveSlot', async (req, res) => {
       msg = res
     }
   }).catch((err) => {
-    msg = err
+    msg = err.message
   })
   res.json({ success, msg })
 })
 
-server.get('/reset', async (req, res) => {
-  let exist = await validPath(userPath)
+server.get('/resetStage', async (req, res) => {
+  const exist = await validPath(userPath)
   if (exist) {
     await copyData(false, true)
     res.json({ success: true, msg: '' })
@@ -361,7 +385,7 @@ server.post('/custom', async (req, res) => {
       msg = res
     }
   }).catch((err) => {
-    msg = err
+    msg = err.message
   })
 
   res.json({ success, msg })
@@ -372,4 +396,17 @@ server.get('/customImg', async (req, res) => {
   const exists = await fse.pathExists(file)
   if (exists === true) res.sendFile(file)
   else res.sendStatus(404)
+})
+
+server.post('/saveGame', async (req, res) => {
+  let data = req.body
+  let success = false
+  let msg = ''
+  await saveGames(data).then(() => {
+    success = true
+  }).catch((err) => {
+    msg = err.message
+  })
+
+  res.json({ success, msg })
 })
