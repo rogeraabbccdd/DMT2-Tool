@@ -46,3 +46,6 @@ A tool to manage cracked DJMAX TECHNIKA 2
 - Add game settings, fullscreen, volume, show fps...etc.
 - Add version in footer.
 - Fix custom songs not added in game.
+### 1.4.1
+- Fix typo in settings page.
+- Remove custom songs download link.
