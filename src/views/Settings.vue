@@ -21,7 +21,7 @@
             v-switch.ma-2(v-model='game.vsync' label='VSync')
           v-subheader.pl-0 Key sound volume
           v-slider(v-model.number="game.sfx_volume" thumb-label="always" min="0" max="127")
-          v-subheader.pl-0 BGM.number volume
+          v-subheader.pl-0 BGM volume
           v-slider(v-model.number="game.bgm_volume" thumb-label="always" min="0" max="127")
           v-btn(color='green' @click="saveGame()") Save
 </template>
