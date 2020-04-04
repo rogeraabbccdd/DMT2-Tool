@@ -38,10 +38,7 @@
           h1.white--text Custom Songs
           hr
           br
-          p Can't find any custom songs. You can download some from
-            | &nbsp;
-            a(href="#" @click="openExternal('https://github.com/rogeraabbccdd/DMT2-Songs')") here
-            | .
+          p Can't find any custom songs.
     v-btn.btn-add(fixed dark fab bottom right color='pink' @click="initDialog()")
       v-icon mdi-plus
     v-dialog(v-model='dialog.show' width='500')
