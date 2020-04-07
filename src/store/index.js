@@ -34,7 +34,7 @@ export default new Vuex.Store({
       state.stages = data
     },
     saveTool (state, data) {
-      state.settings[data.type] = data.value
+      state.tool[data.type] = data.value
       localStorage.setItem('settings', JSON.stringify(state.tool))
     },
     lastno (state, data) {
