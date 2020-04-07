@@ -59,21 +59,21 @@
                   br
                   v-switch(disabled v-model='dialog.loopBga' label='Loop BGA')
                   br
-                  v-text-field(v-model='dialog.Star_1' label='STAR NM difficulty' :messages="[`0 if doesn't exists`]" type='number' min="0" :rules="rules")
+                  v-text-field(v-model='dialog.Star_1' label='STAR NM difficulty' :messages="[`0 if doesn't exist`]" type='number' min="0" :rules="rules")
                   br
-                  v-text-field(v-model='dialog.Star_2' label='STAR HD difficulty' :messages="[`0 if doesn't exists`]" type='number' min="0" :rules="rules")
+                  v-text-field(v-model='dialog.Star_2' label='STAR HD difficulty' :messages="[`0 if doesn't exist`]" type='number' min="0" :rules="rules")
                   br
-                  v-text-field(v-model='dialog.Star_3' label='STAR MX difficulty' :messages="[`0 if doesn't exists`]" type='number' min="0" :rules="rules")
+                  v-text-field(v-model='dialog.Star_3' label='STAR MX difficulty' :messages="[`0 if doesn't exist`]" type='number' min="0" :rules="rules")
                   br
-                  v-text-field(v-model='dialog.Star_4' label='STAR EX difficulty' :messages="[`0 if doesn't exists`]" type='number' min="0" :rules="rules")
+                  v-text-field(v-model='dialog.Star_4' label='STAR EX difficulty' :messages="[`0 if doesn't exist`]" type='number' min="0" :rules="rules")
                   br
-                  v-text-field(v-model='dialog.Pop_1' label='POP NM difficulty' :messages="[`0 if doesn't exists`]" type='number' min="0" :rules="rules")
+                  v-text-field(v-model='dialog.Pop_1' label='POP NM difficulty' :messages="[`0 if doesn't exist`]" type='number' min="0" :rules="rules")
                   br
-                  v-text-field(v-model='dialog.Pop_2' label='POP HD difficulty' :messages="[`0 if doesn't exists`]" type='number' min="0" :rules="rules")
+                  v-text-field(v-model='dialog.Pop_2' label='POP HD difficulty' :messages="[`0 if doesn't exist`]" type='number' min="0" :rules="rules")
                   br
-                  v-text-field(v-model='dialog.Pop_3' label='POP MX difficulty' :messages="[`0 if doesn't exists`]" type='number' min="0" :rules="rules")
+                  v-text-field(v-model='dialog.Pop_3' label='POP MX difficulty' :messages="[`0 if doesn't exist`]" type='number' min="0" :rules="rules")
                   br
-                  v-text-field(v-model='dialog.Pop_4' label='POP EX difficulty' :messages="[`0 if doesn't exists`]" type='number' min="0" :rules="rules")
+                  v-text-field(v-model='dialog.Pop_4' label='POP EX difficulty' :messages="[`0 if doesn't exist`]" type='number' min="0" :rules="rules")
           v-divider
           v-card-actions
             v-spacer
