@@ -395,7 +395,7 @@ server.get('/customImg', async (req, res) => {
   let file = userPath + '/Resource/eyecatch/song/' + req.query.name + '_0.jpg'
   const exists = await fse.pathExists(file)
   if (exists === true) res.sendFile(file)
-  else res.sendStatus(404)
+  else res.sendFile(path.join(__static, 'eyecatch/placeholder.jpg'))
 })
 
 server.post('/saveGame', async (req, res) => {
