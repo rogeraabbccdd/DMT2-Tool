@@ -37,3 +37,6 @@
 
 ::-webkit-scrollbar-corner
   background #202020
+
+div.cards > [class*='col-']
+  display flex

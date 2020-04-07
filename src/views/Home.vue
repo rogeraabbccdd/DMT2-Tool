@@ -5,7 +5,7 @@
         v-col(cols="10")
           h1.white--text Songs
           hr
-          v-row
+          v-row.cards
             v-col(cols='4' v-for="(s, idx) in songs" :key="idx" v-if="s['no'] !== '39'")
               v-card
                 v-img.white--text.align-end(height='200px' :src="'./eyecatch/'+s['name']+'_1.jpg'" v-if="")

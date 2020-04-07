@@ -5,7 +5,7 @@
         v-col(cols="10")
           h1.white--text Custom Songs
           hr
-          v-row
+          v-row.cards
             v-col(cols='4' v-for="(s, idx) in customSongs" :key="idx")
               v-card
                 v-img.white--text.align-end(height='200px' :src="'http://localhost:616/customImg?name=' + s['name']")
