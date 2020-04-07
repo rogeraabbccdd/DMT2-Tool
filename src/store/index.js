@@ -18,6 +18,8 @@ export default new Vuex.Store({
     },
     songs: [],
     stages: [],
+    defaultSongs: [],
+    defaultStages: [],
     lastno: 0
   },
   mutations: {
@@ -32,6 +34,12 @@ export default new Vuex.Store({
     },
     initStages (state, data) {
       state.stages = data
+    },
+    initDefaultSongs (state, data) {
+      state.defaultSongs = data
+    },
+    initDefaultStages (state, data) {
+      state.defaultStages = data
     },
     saveTool (state, data) {
       state.tool[data.type] = data.value
@@ -53,6 +61,12 @@ export default new Vuex.Store({
     },
     songs (state) {
       return state.songs
+    },
+    defaultStages: (state) => (data) => {
+      return state.defaultStages.slice(data.from, data.to + 1)
+    },
+    defaultSongs (state) {
+      return state.defaultSongs
     },
     lastno (state) {
       return state.lastno

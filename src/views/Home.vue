@@ -59,21 +59,21 @@
                   br
                   v-switch(disabled v-model='dialog.loopBga' label='Loop BGA')
                   br
-                  v-text-field(v-model='dialog.Star_1' label='STAR NM difficulty' :messages="[`0 if doesn't exist`]" type='number' min="0" :rules="rules")
+                  v-text-field(:disabled="isDefault('Star_1')" v-model='dialog.Star_1' label='STAR NM difficulty' :messages="[`0 if doesn't exist`]" type='number' min="0" :rules="rules")
                   br
-                  v-text-field(v-model='dialog.Star_2' label='STAR HD difficulty' :messages="[`0 if doesn't exist`]" type='number' min="0" :rules="rules")
+                  v-text-field(:disabled="isDefault('Star_2')" v-model='dialog.Star_2' label='STAR HD difficulty' :messages="[`0 if doesn't exist`]" type='number' min="0" :rules="rules")
                   br
-                  v-text-field(v-model='dialog.Star_3' label='STAR MX difficulty' :messages="[`0 if doesn't exist`]" type='number' min="0" :rules="rules")
+                  v-text-field(:disabled="isDefault('Star_3')" v-model='dialog.Star_3' label='STAR MX difficulty' :messages="[`0 if doesn't exist`]" type='number' min="0" :rules="rules")
                   br
-                  v-text-field(v-model='dialog.Star_4' label='STAR EX difficulty' :messages="[`0 if doesn't exist`]" type='number' min="0" :rules="rules")
+                  v-text-field(:disabled="isDefault('Star_4')" v-model='dialog.Star_4' label='STAR EX difficulty' :messages="[`0 if doesn't exist`]" type='number' min="0" :rules="rules")
                   br
-                  v-text-field(v-model='dialog.Pop_1' label='POP NM difficulty' :messages="[`0 if doesn't exist`]" type='number' min="0" :rules="rules")
+                  v-text-field(:disabled="isDefault('Pop_1')" v-model='dialog.Pop_1' label='POP NM difficulty' :messages="[`0 if doesn't exist`]" type='number' min="0" :rules="rules")
                   br
-                  v-text-field(v-model='dialog.Pop_2' label='POP HD difficulty' :messages="[`0 if doesn't exist`]" type='number' min="0" :rules="rules")
+                  v-text-field(:disabled="isDefault('Pop_2')" v-model='dialog.Pop_2' label='POP HD difficulty' :messages="[`0 if doesn't exist`]" type='number' min="0" :rules="rules")
                   br
-                  v-text-field(v-model='dialog.Pop_3' label='POP MX difficulty' :messages="[`0 if doesn't exist`]" type='number' min="0" :rules="rules")
+                  v-text-field(:disabled="isDefault('Pop_3')" v-model='dialog.Pop_3' label='POP MX difficulty' :messages="[`0 if doesn't exist`]" type='number' min="0" :rules="rules")
                   br
-                  v-text-field(v-model='dialog.Pop_4' label='POP EX difficulty' :messages="[`0 if doesn't exist`]" type='number' min="0" :rules="rules")
+                  v-text-field(:disabled="isDefault('Pop_4')" v-model='dialog.Pop_4' label='POP EX difficulty' :messages="[`0 if doesn't exist`]" type='number' min="0" :rules="rules")
           v-divider
           v-card-actions
             v-spacer
@@ -118,6 +118,9 @@ export default {
       return this.$store.getters.songs.filter((s) => {
         return parseInt(s['no']) < 116
       })
+    },
+    defaultSongs () {
+      return this.$store.getters.defaultSongs
     }
   },
   methods: {
@@ -141,6 +144,11 @@ export default {
           this.$swal({ type: 'error', title: 'Error', text: err })
         })
       }
+    },
+    isDefault (difficulty) {
+      return this.defaultSongs.filter((song) => {
+        return song[difficulty] > 0 && song.no === this.dialog.songNo
+      }).length > 0
     },
     edit (song) {
       const loop = song.loopBga === 'FALSE' ? 0 : 1

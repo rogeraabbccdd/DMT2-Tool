@@ -91,6 +91,8 @@ export default {
             this.$store.commit('initSongs', songs)
             this.$store.commit('initStages', res.data.stage)
             this.$store.commit('initSettings', res.data.settings)
+            this.$store.commit('initDefaultSongs', res.data.defaultSongs)
+            this.$store.commit('initDefaultStages', res.data.defaultSong)
           } else {
             this.$swal({ type: 'error', title: 'Error', text: res.data.msg })
           }

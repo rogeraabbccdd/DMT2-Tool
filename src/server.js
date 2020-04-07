@@ -83,15 +83,25 @@ const validPath = async (rootpath) => {
 const readData = async () => {
   const songs = []
   const stage = []
+  const defaultSongs = []
+  const defaultStage = []
   const settings = {}
   let exists = await fse.pathExists(userPath + gameDiscInfoFolder + gameFileDiscStock)
   if (exists === false) {
     await copyData(true, true)
   }
-  const discStreeam = fs.createReadStream(userPath + gameDiscInfoFolder + gameFileDiscStock, 'utf16le')
+
+  let discStreeam = fs.createReadStream(userPath + gameDiscInfoFolder + gameFileDiscStock, 'utf16le')
     .pipe(csv.parse({ delimiter: '\t', headers: true, quote: '\'', escape: '\\', ignoreEmpty: true }))
     .on('data', (data) => {
       songs.push(data)
+    })
+  await once(discStreeam, 'finish')
+
+  discStreeam = fs.createReadStream(path.join(__static, 'files/' + gameFileDiscStock), 'utf16le')
+    .pipe(csv.parse({ delimiter: '\t', headers: true, quote: '\'', escape: '\\', ignoreEmpty: true }))
+    .on('data', (data) => {
+      defaultSongs.push(data)
     })
   await once(discStreeam, 'finish')
 
@@ -105,6 +115,16 @@ const readData = async () => {
     await once(stageStream, 'finish')
   }
 
+  for (let file in gameFileStages) {
+    const stageStream = fs.createReadStream(path.join(__static, 'files/' + gameFileStages[file]))
+      .pipe(csv.parse({ delimiter: ',', quote: '`', escape: '\\', ignoreEmpty: true }))
+      .on('data', (data) => {
+        if (!isNaN(parseInt(data[0]))) defaultStage.push(data)
+      })
+
+    await once(stageStream, 'finish')
+  }
+
   const config = ini.parse(fs.readFileSync(userPath + gameConfig, 'utf-8'))
   settings.dev_mode = config.setting.dev_mode
   settings.fullscreen = config.setting.fullscreen
@@ -113,7 +133,7 @@ const readData = async () => {
   settings.sfx_volume = config.setting.sfx_volume
   settings.bgm_volume = config.setting.bgm_volume
 
-  return { songs, stage, settings }
+  return { songs, stage, settings, defaultSongs, defaultStage }
 }
 
 const copyData = async (disc, stage) => {
@@ -307,6 +327,8 @@ server.post('/init', async (req, res) => {
   let msg = ''
   let songs = []
   let stage = []
+  let defaultSongs = []
+  let defaultStage = []
   let settings = {}
   let datapath = req.body.path
   const valid = await validPath(datapath)
@@ -317,6 +339,8 @@ server.post('/init', async (req, res) => {
       songs = data.songs
       stage = data.stage
       settings = data.settings
+      defaultSongs = data.defaultSongs
+      defaultStage = data.defaultStage
     }).catch((err) => {
       msg = err.message
     })
@@ -325,7 +349,7 @@ server.post('/init', async (req, res) => {
     msg = `Can't find CLIENT.EXE in selected folder`
   }
 
-  res.json({ success, msg, songs, stage, settings })
+  res.json({ success, msg, songs, stage, settings, defaultSongs, defaultStage })
 })
 
 // validate settings, check folder exist
