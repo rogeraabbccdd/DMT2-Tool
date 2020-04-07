@@ -49,3 +49,12 @@ A tool to manage cracked DJMAX TECHNIKA 2
 ### 1.4.1
 - Fix typo in settings page.
 - Remove custom songs download link.
+### 1.5.0
+- Fix typo.
+- Add reset songs button, reset both custom songs and official songs.
+- Add placeholder image for custom songs if eyecatch failed to load.
+- Add difficulty edit features for official songs.
+- Fix default levels in default discstock.csv.
+- Remove custom songs from songs page, they should only display in custom songs page.
+- Fix game path settings.
+- Make song cards same height in songs page and custom songs page.
