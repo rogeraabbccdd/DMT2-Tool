@@ -44,7 +44,9 @@ export default {
   name: 'home',
   computed: {
     songs () {
-      return this.$store.getters.songs
+      return this.$store.getters.songs.filter((s) => {
+        return parseInt(s['no']) < 116
+      })
     }
   },
   methods: {
