@@ -374,6 +374,17 @@ server.get('/resetStage', async (req, res) => {
   }
 })
 
+server.get('/resetSongs', async (req, res) => {
+  const exist = await validPath(userPath)
+  if (exist) {
+    await copyData(true, true)
+    res.json({ success: true, msg: '' })
+  } else {
+    userPath = ''
+    res.json({ success: false, msg: `Can't find CLIENT.EXE in selected folder` })
+  }
+})
+
 server.post('/custom', async (req, res) => {
   let data = req.body
   let success = false

@@ -9,6 +9,7 @@
           br
           v-btn(color='green' @click="saveTool()") Save
           v-btn.mx-3(color='red' @click="resetStage()" v-if="savedPath.length > 0") Reset Stages
+          v-btn(color='red' @click="resetSongs()" v-if="savedPath.length > 0") Reset Songs
         v-col(cols='10' v-if="songs.length > 0")
           hr.my-5
         v-col(cols='10' v-if="songs.length > 0")
@@ -79,10 +80,29 @@ export default {
         })
     },
     resetStage () {
-      this.$swal({ type: 'warning', title: 'Are you sure?', text: 'All your stages will reset to default', showCancelButton: true })
+      this.$swal({ type: 'warning', title: 'Are you sure?', text: 'All stages will reset to default', showCancelButton: true })
         .then((e) => {
           if (e.value) {
             this.axios.get('http://localhost:616/resetStage')
+              .then((res) => {
+                if (res.data.success === true) {
+                  eventBus.$emit('init')
+                  this.$swal({ type: 'success', title: 'Success' })
+                } else {
+                  this.$swal({ type: 'error', title: 'Error', text: res.data.msg })
+                }
+              })
+              .catch((err) => {
+                this.$swal({ type: 'error', title: 'Error', text: err })
+              })
+          }
+        })
+    },
+    resetSongs () {
+      this.$swal({ type: 'warning', title: 'Are you sure?', html: 'All your custom songs will be deleted. <br> All stages will reset to default.', showCancelButton: true })
+        .then((e) => {
+          if (e.value) {
+            this.axios.get('http://localhost:616/resetSongs')
               .then((res) => {
                 if (res.data.success === true) {
                   eventBus.$emit('init')
