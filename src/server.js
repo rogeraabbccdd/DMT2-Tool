@@ -225,7 +225,7 @@ const updateSlot = async (file, slot, page) => {
 
     const writeStream = fs.createWriteStream(file, { flag: 'w' })
     for await (let s of stage) {
-      writeStream.write(s.join(',') + '\n')
+      writeStream.write(s.join(',') + '\r\n')
     }
     writeStream.end()
   } catch (err) {
@@ -306,7 +306,7 @@ const customSong = async (data) => {
       for (let ss of s) {
         w += ss + '\t'
       }
-      writeStream.write(w + '\n')
+      writeStream.write(w + '\r\n')
     }
     writeStream.end()
   } catch (err) {
