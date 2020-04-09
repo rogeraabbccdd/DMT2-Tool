@@ -58,3 +58,6 @@ A tool to manage cracked DJMAX TECHNIKA 2
 - Remove custom songs from songs page, they should only display in custom songs page.
 - Fix game path settings.
 - Make song cards same height in songs page and custom songs page.
+### 1.5.1
+- Fix speed setting.
+- Fix stages.csv encoding.
