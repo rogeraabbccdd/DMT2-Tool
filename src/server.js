@@ -183,13 +183,18 @@ const updateSlot = async (file, slot, page) => {
     })
 
     let index = (page - 1) * 9 + slot.slotNum + 1
+    slot.NM.speed = (slot.NM.speed.value) ? slot.NM.speed.value : slot.NM.speed
+    slot.HD.speed = (slot.HD.speed.value) ? slot.HD.speed.value : slot.HD.speed
+    slot.MX.speed = (slot.MX.speed.value) ? slot.MX.speed.value : slot.MX.speed
+    slot.EX.speed = (slot.EX.speed.value) ? slot.EX.speed.value : slot.EX.speed
+
     stage[index] = [
       slot.songId, slot.song.name,
-      slot.NM.speed.value, 1, 0
+      slot.NM.speed, 1, 0
     ]
 
     if (slot.HD.level > 0) {
-      stage[index].push(slot.HD.speed.value)
+      stage[index].push(slot.HD.speed)
       stage[index].push(2)
       stage[index].push(0)
     } else {
@@ -199,7 +204,7 @@ const updateSlot = async (file, slot, page) => {
     }
 
     if (slot.MX.level > 0) {
-      stage[index].push(slot.MX.speed.value)
+      stage[index].push(slot.MX.speed)
       stage[index].push(3)
       stage[index].push(0)
     } else {
@@ -209,7 +214,7 @@ const updateSlot = async (file, slot, page) => {
     }
 
     if (slot.EX.level > 0) {
-      stage[index].push(slot.EX.speed.value)
+      stage[index].push(slot.EX.speed)
       stage[index].push(4)
       stage[index].push(0)
     } else {
