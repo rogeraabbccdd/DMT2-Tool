@@ -5,8 +5,11 @@
         v-col(cols="10")
           h1.white--text Songs
           hr
+          v-row
+            v-col(cols="12")
+              v-text-field(placeholder="Type to search..." prepend-icon="search" v-model="search")
           v-row.cards
-            v-col(cols='4' v-for="(s, idx) in songs" :key="idx" v-if="s['no'] !== '39'")
+            v-col(cols='4' v-for="(s, idx) in filteredSongs" :key="idx" v-if="s['no'] !== '39'")
               v-card
                 v-img.white--text.align-end(height='200px' :src="'./eyecatch/'+s['name']+'_1.jpg'" v-if="")
                 v-card-title {{ s['FullName'] }}
@@ -88,6 +91,7 @@ export default {
   name: 'home',
   data () {
     return {
+      search: '',
       rules: [
         v => !!v || 'Required',
         v => parseInt(v) >= 0 || 'Minimum is 0'
@@ -121,6 +125,11 @@ export default {
     },
     defaultSongs () {
       return this.$store.getters.defaultSongs
+    },
+    filteredSongs () {
+      return this.songs.filter((song) => {
+        return song.FullName.toUpperCase().includes(this.search.toUpperCase())
+      })
     }
   },
   methods: {
