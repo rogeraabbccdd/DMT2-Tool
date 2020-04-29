@@ -61,3 +61,9 @@ A tool to manage cracked DJMAX TECHNIKA 2
 ### 1.5.1
 - Fix speed setting.
 - Fix stages.csv encoding.
+### 1.6.0
+- Check edited official songs data when reset stages.
+- Add search feature in songs page and custom songs page.
+- Check stages after edit songs, auto add and delete difficulties.
+- Delete custom songs.
+- Add start game button in sidebar.
