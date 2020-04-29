@@ -9,6 +9,9 @@ import fse from 'fs-extra'
 import { once } from 'events'
 import path from 'path'
 import ini from 'ini'
+import childProcess from 'child_process'
+
+const exec = childProcess.execFile
 
 const server = express()
 
@@ -449,4 +452,9 @@ server.post('/saveGame', async (req, res) => {
   })
 
   res.json({ success, msg })
+})
+
+server.get('/play', async (req, res) => {
+  exec(userPath + 'Client.exe')
+  res.send('')
 })

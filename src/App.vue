@@ -44,6 +44,11 @@
               v-icon settings
             v-list-item-content
               v-list-item-title Settings
+          v-list-item(@click="play()" v-if="songs.length > 0")
+            v-list-item-action
+              v-icon play_arrow
+            v-list-item-content
+              v-list-item-title Start Game
       v-app-bar(app clipped-left color="blue darken-2")
         v-app-bar-nav-icon(@click.stop='drawer = !drawer')
         v-toolbar-title DJMAX TECHNIKA 2 Tool
@@ -72,6 +77,9 @@ export default {
   computed: {
     path () {
       return this.$store.getters.tool.path
+    },
+    songs () {
+      return this.$store.getters.songs
     }
   },
   methods: {
@@ -101,6 +109,9 @@ export default {
           this.$swal({ type: 'error', title: 'Error', text: err })
           this.overlay = false
         })
+    },
+    play () {
+      this.axios.get('http://localhost:616/play')
     }
   },
   mounted () {
