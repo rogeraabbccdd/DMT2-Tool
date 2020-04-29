@@ -443,6 +443,141 @@ const customSong = async (data) => {
       writeStream.write(w + '\r\n')
     }
     writeStream.end()
+
+    // check stages
+    const defaultStage = []
+    for (let file in gameFileStages) {
+      const stageStream = fs.createReadStream(path.join(__static, 'files/' + gameFileStages[file]))
+        .pipe(csv.parse({ delimiter: ',', quote: '`', escape: '\\', ignoreEmpty: true }))
+        .on('data', (data) => {
+          if (!isNaN(parseInt(data[0]))) defaultStage.push(data)
+        })
+
+      await once(stageStream, 'finish')
+    }
+
+    const stage = []
+    for (let file in gameFileStages) {
+      const stageStream = fs.createReadStream(userPath + gameDiscInfoFolder + gameFileStages[file])
+        .pipe(csv.parse({ delimiter: ',', quote: '`', escape: '\\', ignoreEmpty: true }))
+        .on('data', (data) => {
+          if (!isNaN(parseInt(data[0]))) stage.push(data)
+        })
+
+      if (file === 'starb' || file === 'popb') continue
+
+      await once(stageStream, 'finish', async () => {
+        await fs.unlink(userPath + gameDiscInfoFolder + gameFileStages[file], (err) => {
+          if (err) throw err
+        })
+      })
+    }
+
+    for (let s in stage) {
+      if (stage[s][0] === data.songNo.toString()) {
+        // star mixing 9 * 3 * 3 = 81
+        if (s < 81) {
+          if (data.Star_1 > 0 || data.Star_2 > 0 || data.Star_3 > 0 || data.Star_4 > 0) {
+            if (data.Star_1 === '0') {
+              stage[s][2] = 0
+              stage[s][3] = 0
+              stage[s][4] = 0
+            } else if (data.Star_1 > 0 && stage[s][3] === '0') {
+              stage[s][2] = 2
+              stage[s][3] = 1
+              stage[s][4] = 0
+            }
+            if (data.Star_2 === '0') {
+              stage[s][5] = 0
+              stage[s][6] = 0
+              stage[s][7] = 0
+            } else if (data.Star_2 > 0 && stage[s][6] === '0') {
+              stage[s][5] = 2
+              stage[s][6] = 2
+              stage[s][7] = 0
+            }
+            if (data.Star_3 === '0') {
+              stage[s][8] = 0
+              stage[s][9] = 0
+              stage[s][10] = 0
+            } else if (data.Star_3 > 0 && stage[s][9] === '0') {
+              stage[s][8] = 2
+              stage[s][9] = 3
+              stage[s][10] = 0
+            }
+            if (data.Star_4 === '0') {
+              stage[s][11] = 0
+              stage[s][12] = 0
+              stage[s][13] = 0
+            } else if (data.Star_4 > 0 && stage[s][12] === '0') {
+              stage[s][11] = 2
+              stage[s][12] = 4
+              stage[s][13] = 0
+            }
+          } else {
+            stage[s] = defaultStage[s]
+          }
+        } else {
+          if (data.Pop_1 > 0 || data.Pop_2 > 0 || data.Pop_3 > 0 || data.Pop_4 > 0) {
+            if (data.Pop_1 === '0') {
+              stage[s][2] = 0
+              stage[s][3] = 0
+              stage[s][4] = 0
+            } else if (data.Pop_1 > 0 && stage[s][3] === '0') {
+              stage[s][2] = 2
+              stage[s][3] = 1
+              stage[s][4] = 0
+            }
+            if (data.Pop_2 === '0') {
+              stage[s][5] = 0
+              stage[s][6] = 0
+              stage[s][7] = 0
+            } else if (data.Pop_2 > 0 && stage[s][6] === '0') {
+              stage[s][5] = 2
+              stage[s][6] = 2
+              stage[s][7] = 0
+            }
+            if (data.Pop_3 === '0') {
+              stage[s][8] = 0
+              stage[s][9] = 0
+              stage[s][10] = 0
+            } else if (data.Pop_3 > 0 && stage[s][9] === '0') {
+              stage[s][8] = 2
+              stage[s][9] = 3
+              stage[s][10] = 0
+            }
+            if (data.Pop_4 === '0') {
+              stage[s][11] = 0
+              stage[s][12] = 0
+              stage[s][13] = 0
+            } else if (data.Pop_4 > 0 && stage[s][12] === '0') {
+              stage[s][11] = 2
+              stage[s][12] = 4
+              stage[s][13] = 0
+            }
+          } else {
+            stage[s] = defaultStage[s]
+          }
+        }
+      }
+    }
+
+    let count = 0
+    for (let file in gameFileStages) {
+      if (file === 'starb' || file === 'popb') continue
+      const writeStream = fs.createWriteStream(userPath + gameDiscInfoFolder + gameFileStages[file], { flag: 'w' })
+      writeStream.write(`stage${gameFileStages[file].slice(-5, -4)},songname,SP,PT,Hid,SP,PT,Hid,SP,PT,Hid,SP,PT,Hid\r\n`)
+      for await (let s of stage) {
+        writeStream.write(s.join(',') + '\r\n')
+        count++
+        if (count % 27 === 0) {
+          count = 0
+          stage.splice(0, 27)
+          break
+        }
+      }
+      writeStream.end()
+    }
   } catch (err) {
     msg = err.message
   }
