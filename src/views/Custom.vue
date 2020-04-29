@@ -33,8 +33,11 @@
                     span.red--text(v-if="s['Pop_3'] > 0") MX {{ s['Pop_3'] }}
                     span(v-if="s['Pop_4'] > 0") &emsp;/&emsp;
                     span.purple--text.text--lighten-3(v-if="s['Pop_4'] > 0") EX {{ s['Pop_4'] }}
+                br
                 v-btn.btn-edit(absolute icon dark fab bottom right color='green' @click="edit(s)")
                   v-icon edit
+                v-btn.btn-del(absolute icon dark fab bottom right color='red' @click="del(s)")
+                  v-icon delete
     v-container(fill-height v-else)
       v-row(:justify="'center'")
         v-col(cols="10")
@@ -200,6 +203,25 @@ export default {
         Pop_3: 0,
         Pop_4: 0
       }
+    },
+    del (song) {
+      this.$swal({ type: 'warning', title: 'Are you sure?', text: 'All stage slots with this song will reset to default', showCancelButton: true })
+        .then((e) => {
+          if (e.value) {
+            this.axios.post('http://localhost:616/del', { songNo: song.no })
+              .then((res) => {
+                if (res.data.success === true) {
+                  eventBus.$emit('init')
+                  this.$swal({ type: 'success', title: 'Success' })
+                } else {
+                  this.$swal({ type: 'error', title: 'Error', text: res.data.msg })
+                }
+              })
+              .catch((err) => {
+                this.$swal({ type: 'error', title: 'Error', text: err.message })
+              })
+          }
+        })
     }
   }
 }

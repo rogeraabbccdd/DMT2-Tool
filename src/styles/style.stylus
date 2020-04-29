@@ -4,6 +4,11 @@
 .btn-add
   bottom: 50px !important
 
+.btn-del
+  position absolute
+  bottom 0 !important
+  right 56px !important
+
 .swal2-popup
   font-family "Roboto", sans-serif
 
