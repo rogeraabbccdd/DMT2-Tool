@@ -35,15 +35,7 @@ export default {
   name: 'settings',
   data () {
     return {
-      path: '',
-      game: {
-        dev_mode: false,
-        fullscreen: false,
-        show_cursor: false,
-        vsync: false,
-        sfx_volume: 127,
-        bgm_volume: 127
-      }
+      path: ''
     }
   },
   computed: {
@@ -52,6 +44,11 @@ export default {
     },
     songs () {
       return this.$store.getters.songs
+    },
+    game: {
+      get () {
+        return this.$store.getters.settings
+      }
     }
   },
   methods: {
@@ -133,12 +130,6 @@ export default {
   },
   mounted () {
     this.path = this.$store.getters.tool.path
-    this.game.dev_mode = this.$store.getters.settings.dev_mode
-    this.game.fullscreen = this.$store.getters.settings.fullscreen
-    this.game.show_cursor = this.$store.getters.settings.show_cursor
-    this.game.vsync = this.$store.getters.settings.vsync
-    this.game.sfx_volume = this.$store.getters.settings.sfx_volume
-    this.game.bgm_volume = this.$store.getters.settings.bgm_volume
   }
 }
 </script>
