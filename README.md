@@ -67,3 +67,6 @@ A tool to manage cracked DJMAX TECHNIKA 2
 - Check stages after edit songs, auto add and delete difficulties.
 - Delete custom songs.
 - Add start game button in sidebar.
+### 1.6.1
+- Add open folder button in menu.
+- Fix keep creating readonly file.
