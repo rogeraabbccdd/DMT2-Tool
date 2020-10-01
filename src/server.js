@@ -837,3 +837,8 @@ server.post('/del', async (req, res) => {
 
   res.json({ success, msg })
 })
+
+server.get('/folder', async (req, res) => {
+  shell.showItemInFolder(userPath + 'Client.exe')
+  res.send('')
+})
