@@ -10,6 +10,8 @@ import { once } from 'events'
 import path from 'path'
 import ini from 'ini'
 import childProcess from 'child_process'
+import { shell } from 'electron'
+import chmodr from 'chmodr'
 
 const exec = childProcess.execFile
 
@@ -164,6 +166,8 @@ const copyData = async (disc, stage) => {
     }
   }
 
+  chmodr(userPath + gameDiscInfoFolder, 0o777, () => {})
+
   // check official songs difficulty after reset stage
   if (!disc && stage) {
     const songs = []
@@ -280,7 +284,7 @@ const copyData = async (disc, stage) => {
 
     let count = 0
     for (let file in gameFileStages) {
-      const writeStream = fs.createWriteStream(userPath + gameDiscInfoFolder + gameFileStages[file], { flag: 'w' })
+      const writeStream = fs.createWriteStream(userPath + gameDiscInfoFolder + gameFileStages[file], { flag: 'w', mode: 0o777 })
       writeStream.write(`stage${gameFileStages[file].slice(-5, -4)},songname,SP,PT,Hid,SP,PT,Hid,SP,PT,Hid,SP,PT,Hid\r\n`)
       for await (let s of stagearr) {
         writeStream.write(s.join(',') + '\r\n')
@@ -357,7 +361,7 @@ const updateSlot = async (file, slot, page) => {
       stage[index].push(0)
     }
 
-    const writeStream = fs.createWriteStream(file, { flag: 'w' })
+    const writeStream = fs.createWriteStream(file, { flag: 'w', mode: 0o777 })
     for await (let s of stage) {
       writeStream.write(s.join(',') + '\r\n')
     }
@@ -434,7 +438,7 @@ const customSong = async (data) => {
       ]
     }
 
-    const writeStream = fs.createWriteStream(userPath + gameDiscInfoFolder + gameFileDiscStock, { flag: 'w', encoding: 'utf16le' })
+    const writeStream = fs.createWriteStream(userPath + gameDiscInfoFolder + gameFileDiscStock, { flag: 'w', mode: 0o777, encoding: 'utf16le' })
     for await (let s of songs) {
       let w = ''
       for (let ss of s) {
@@ -565,7 +569,7 @@ const customSong = async (data) => {
     let count = 0
     for (let file in gameFileStages) {
       if (file === 'starb' || file === 'popb') continue
-      const writeStream = fs.createWriteStream(userPath + gameDiscInfoFolder + gameFileStages[file], { flag: 'w' })
+      const writeStream = fs.createWriteStream(userPath + gameDiscInfoFolder + gameFileStages[file], { flag: 'w', mode: 0o777 })
       writeStream.write(`stage${gameFileStages[file].slice(-5, -4)},songname,SP,PT,Hid,SP,PT,Hid,SP,PT,Hid,SP,PT,Hid\r\n`)
       for await (let s of stage) {
         writeStream.write(s.join(',') + '\r\n')
@@ -620,7 +624,7 @@ const delSongs = async (songNo) => {
 
     songs.splice(idx, 1)
 
-    let writeStream = fs.createWriteStream(userPath + gameDiscInfoFolder + gameFileDiscStock, { flag: 'w', encoding: 'utf16le' })
+    let writeStream = fs.createWriteStream(userPath + gameDiscInfoFolder + gameFileDiscStock, { flag: 'w', mode: 0o777, encoding: 'utf16le' })
     for await (let s of songs) {
       let w = ''
       for (let ss of s) {
@@ -669,7 +673,7 @@ const delSongs = async (songNo) => {
     let count = 0
     for (let file in gameFileStages) {
       if (file === 'starb' || file === 'popb') continue
-      const writeStream = fs.createWriteStream(userPath + gameDiscInfoFolder + gameFileStages[file], { flag: 'w' })
+      const writeStream = fs.createWriteStream(userPath + gameDiscInfoFolder + gameFileStages[file], { flag: 'w', mode: 0o777 })
       writeStream.write(`stage${gameFileStages[file].slice(-5, -4)},songname,SP,PT,Hid,SP,PT,Hid,SP,PT,Hid,SP,PT,Hid\r\n`)
       for await (let s of stage) {
         writeStream.write(s.join(',') + '\r\n')
