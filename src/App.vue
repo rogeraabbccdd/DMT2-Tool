@@ -73,7 +73,7 @@
       v-footer(app)
         span © {{ new Date().getFullYear() }} Made with ❤ by Kento
         v-spacer
-        span 1.6.1
+        span {{ version }}
       v-overlay.text-center(:value='overlay')
         v-progress-circular(:size='50' color='primary' indeterminate)
         br
@@ -81,13 +81,15 @@
 </template>
 
 <script>
+import { version } from '../package.json'
 import { eventBus } from './main.js'
 export default {
   name: 'App',
   data () {
     return {
       drawer: null,
-      overlay: false
+      overlay: false,
+      version
     }
   },
   computed: {
