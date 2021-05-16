@@ -14,25 +14,25 @@
                 v-img.white--text.align-end(height='200px' :src="'./eyecatch/'+s['name']+'_1.jpg'" v-if="")
                 v-card-title {{ s['FullName'] }}
                 v-card-text.text--primary
-                  div(v-if="s['Star_1'] > 0 || s['Star_2'] > 0 || s['Star_3'] > 0 || s['Star_4'] > 0") STAR MIXING
+                  div STAR MIXING
                   div
-                    span.yellow--text.lighten-1(v-if="s['Star_1'] > 0") NM {{ s['Star_1'] }}
-                    span(v-if="s['Star_2'] > 0") &emsp;/&emsp;
-                    span.blue--text(v-if="s['Star_2'] > 0") HD {{ s['Star_2'] }}
-                    span(v-if="s['Star_3'] > 0") &emsp;/&emsp;
-                    span.red--text(v-if="s['Star_3'] > 0") MX {{ s['Star_3'] }}
-                    span(v-if="s['Star_4'] > 0") &emsp;/&emsp;
-                    span.purple--text.text--lighten-3(v-if="s['Star_4'] > 0") EX {{ s['Star_4'] }}
+                    span.yellow--text.lighten-1 NM {{ s['Star_1'] > 0 ? s['Star_1'] : '-' }}
+                    span &emsp;/&emsp;
+                    span.blue--text HD {{ s['Star_2'] > 0 ? s['Star_2'] : '-' }}
+                    span &emsp;/&emsp;
+                    span.red--text MX {{ s['Star_3'] > 0 ? s['Star_3'] : '-' }}
+                    span &emsp;/&emsp;
+                    span.purple--text.text--lighten-3 EX {{ s['Star_4'] > 0 ? s['Star_4'] : '-' }}
                   br
                   div POP MIXING
                   div
-                    span.yellow--text.lighten-1 NM {{ s['Pop_1'] }}
-                    span(v-if="s['Pop_2'] > 0") &emsp;/&emsp;
-                    span.blue--text(v-if="s['Pop_2'] > 0") HD {{ s['Pop_2'] }}
-                    span(v-if="s['Pop_3'] > 0") &emsp;/&emsp;
-                    span.red--text(v-if="s['Pop_3'] > 0") MX {{ s['Pop_3'] }}
-                    span(v-if="s['Pop_4'] > 0") &emsp;/&emsp;
-                    span.purple--text.text--lighten-3(v-if="s['Pop_4'] > 0") EX {{ s['Pop_4'] }}
+                    span.yellow--text.lighten-1 NM {{ s['Pop_1'] > 0 ? s['Pop_1'] : '-' }}
+                    span &emsp;/&emsp;
+                    span.blue--text HD {{ s['Pop_2'] > 0 ? s['Pop_2'] : '-' }}
+                    span &emsp;/&emsp;
+                    span.red--text MX {{ s['Pop_3'] > 0 ? s['Pop_3'] : '-' }}
+                    span &emsp;/&emsp;
+                    span.purple--text.text--lighten-3 EX {{ s['Pop_4'] > 0 ? s['Pop_4'] : '-' }}
                   v-btn.btn-edit(absolute icon dark fab bottom right color='green' @click="edit(s)")
                     v-icon edit
     v-container(fill-height v-else)
