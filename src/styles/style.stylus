@@ -45,3 +45,6 @@
 
 div.cards > [class*='col-']
   display flex
+
+.v-navigation-drawer
+  max-height none !important
