@@ -140,10 +140,13 @@ const readData = async () => {
 }
 
 const copyData = async (disc, stage) => {
+  // rename pak to enable custom songs feature
   let exists = await fse.pathExists(userPath + gamePakDiscInfoPak)
   if (exists === true) {
     await fs.renameSync(userPath + gamePakDiscInfoPak, userPath + gamePakDiscInfoPakBackup)
   }
+
+  // copy club mixing sets
   for (let file of gameFileClubs) {
     exists = await fse.pathExists(userPath + gameDiscInfoFolder + file)
     if (exists === false) {
@@ -151,11 +154,15 @@ const copyData = async (disc, stage) => {
       await fse.copy(filepath, userPath + gameDiscInfoFolder + file, { overwrite: true })
     }
   }
+
+  // copy discstock if file not exists or disc overwrite is true
   exists = await fse.pathExists(userPath + gameDiscInfoFolder + gameFileDiscStock)
   if (exists === false || disc === true) {
     const filepath = path.join(__static, 'files/' + gameFileDiscStock)
     await fse.copy(filepath, userPath + gameDiscInfoFolder + gameFileDiscStock, { overwrite: true })
   }
+
+  // copy stage files if file not exists or stage overwrite is true
   for (let file in gameFileStages) {
     exists = await fse.pathExists(userPath + gameDiscInfoFolder + gameFileStages[file])
     if (exists === false || stage === true) {
@@ -166,9 +173,12 @@ const copyData = async (disc, stage) => {
 
   chmodr(userPath + gameDiscInfoFolder, 0o777, () => {})
 
-  // check official songs difficulty after reset stage
+  // get official songs difficulty from discstock after reset stage
+  // and write it to stages csv
+  // to apply modified difficulties in official songs
   if (!disc && stage) {
     const songs = []
+
     const discStreeam = fs.createReadStream(userPath + gameDiscInfoFolder + gameFileDiscStock, 'utf16le')
       .pipe(csv.parse({ delimiter: '\t', headers: true, quote: '\'', escape: '\\', ignoreEmpty: true }))
       .on('data', (data) => {
@@ -197,7 +207,7 @@ const copyData = async (disc, stage) => {
       })[0]
 
       if (stagearr[s][0] === data.no.toString()) {
-      // star mixing 9 * 3 * 4 = 108
+        // star mixing 9 * 3 * 4 = 108
         if (s < 108) {
           if (data.Star_1 > 0 || data.Star_2 > 0 || data.Star_3 > 0 || data.Star_4 > 0) {
             if (data.Star_1 === '0') {
