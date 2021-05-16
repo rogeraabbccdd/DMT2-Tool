@@ -34,10 +34,10 @@ const gameFileStages = {
   star1: 'star_stage_1.csv',
   star2: 'star_stage_2.csv',
   star3: 'star_stage_3.csv',
+  starb: 'star_stage_bonus.csv',
   pop1: 'pop_stage_1.csv',
   pop2: 'pop_stage_2.csv',
   pop3: 'pop_stage_3.csv',
-  starb: 'star_stage_bonus.csv',
   popb: 'pop_stage_bonus.csv'
 }
 const gameFileClubs = [
@@ -197,8 +197,8 @@ const copyData = async (disc, stage) => {
       })[0]
 
       if (stagearr[s][0] === data.no.toString()) {
-      // star mixing 9 * 3 * 3 = 81
-        if (s < 81) {
+      // star mixing 9 * 3 * 4 = 108
+        if (s < 108) {
           if (data.Star_1 > 0 || data.Star_2 > 0 || data.Star_3 > 0 || data.Star_4 > 0) {
             if (data.Star_1 === '0') {
               stagearr[s][2] = 0
@@ -303,8 +303,7 @@ const updateSlot = async (file, slot, page) => {
   try {
     const exists = await fse.pathExists(file)
     if (exists === false) {
-      const err = `Can't find stage file in game folder`
-      throw err
+      throw new Error(`Can't find stage file in game folder`)
     }
     let stage = []
     const readStream = fs.createReadStream(file)
@@ -477,8 +476,8 @@ const customSong = async (data) => {
 
     for (let s in stage) {
       if (stage[s][0] === data.songNo.toString()) {
-        // star mixing 9 * 3 * 3 = 81
-        if (s < 81) {
+        // star mixing 9 * 3 * 4 = 108
+        if (s < 108) {
           if (data.Star_1 > 0 || data.Star_2 > 0 || data.Star_3 > 0 || data.Star_4 > 0) {
             if (data.Star_1 === '0') {
               stage[s][2] = 0
@@ -743,6 +742,7 @@ server.post('/saveSettings', async (req, res) => {
 server.post('/saveSlot', async (req, res) => {
   let slot = req.body.slot
   let page = req.body.page
+  if (req.body.num === '4') req.body.num = 'bonus'
   let file = userPath + gameDiscInfoFolder + req.body.mode + '_stage_' + req.body.num + '.csv'
   let success = false
   let msg = ''

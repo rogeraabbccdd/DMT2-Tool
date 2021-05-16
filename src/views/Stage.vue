@@ -3,7 +3,7 @@
     v-container(fill-height v-if="stages.length > 0 && songs.length > 0")
       v-row(:justify="'center'")
         v-col(cols="12" md="10")
-          h1.white--text {{ mode.toUpperCase() }} MIXING Stage {{ num }}
+          h1.white--text {{ mode.toUpperCase() }} MIXING Stage {{ num === '4' ? 'Bonus' : num }}
           hr
           br
           v-row
@@ -149,7 +149,7 @@ export default {
       return this.$route.params.num
     },
     to () {
-      let mode = this.mode === 'star' ? 0 : 3
+      let mode = this.mode === 'star' ? 0 : 4
       return (mode + parseInt(this.num)) * 27 - (3 - this.page) * 9 - 1
     },
     from () {

@@ -26,6 +26,9 @@
             v-list-item(@click="goto('/stage/star/3')")
               v-list-item-content
                 v-list-item-title Stage 3
+            v-list-item(@click="goto('/stage/star/4')")
+              v-list-item-content
+                v-list-item-title Bonus
           v-list-group(prepend-icon="album"  no-action)
             template(v-slot:activator)
               v-list-item-content
@@ -39,6 +42,9 @@
             v-list-item(@click="goto('/stage/pop/3')")
               v-list-item-content
                 v-list-item-title Stage 3
+            v-list-item(@click="goto('/stage/pop/4')")
+              v-list-item-content
+                v-list-item-title Bonus
           v-list-item(@click="goto('/settings')")
             v-list-item-action
               v-icon settings
