@@ -15,6 +15,8 @@
         v-col(cols='10' v-if="songs.length > 0")
           h1.white--text Game Settings
           br
+          v-text-field(:messages="['Enter your card ID for local server']" v-model='game.card' label='Card ID' required ref="card" counter="20" minlength="20" maxlength="20" size="20" @input="onCardInput")
+          br
           v-row(justify="space-around")
             v-switch.ma-2(v-model='game.dev_mode' label='Show FPS')
             v-switch.ma-2(v-model='game.fullscreen' label='Fullscreen')
@@ -115,17 +117,24 @@ export default {
         })
     },
     saveGame () {
+      if (this.game.card.length !== 20) {
+        this.$swal({ type: 'error', title: 'Error', text: 'Wrong card ID format' })
+        return
+      }
       this.axios.post('http://localhost:616/saveGame', this.game)
         .then((res) => {
           if (res.data.success === true) {
             this.$swal({ type: 'success', title: 'Success' })
             this.$store.commit('initSettings', this.game)
           } else {
-            this.$swal({ type: 'error', title: 'Error', text: res.data.msg })
+            this.$swal({ type: 'error', title: 'Error`', text: res.data.msg })
           }
         }).catch((err) => {
           this.$swal({ type: 'error', title: 'Error', text: err })
         })
+    },
+    onCardInput (value) {
+      this.game.card = value.toUpperCase()
     }
   },
   mounted () {

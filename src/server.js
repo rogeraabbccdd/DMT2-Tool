@@ -89,9 +89,17 @@ const readData = async () => {
   const defaultSongs = []
   const defaultStage = []
   const settings = {}
+  let card = '12345678ABCDEFGHIJKL'
   let exists = await fse.pathExists(userPath + gameDiscInfoFolder + gameFileDiscStock)
   if (exists === false) {
-    await copyData(true, true)
+    await copyData(true, true, false)
+  }
+
+  exists = await fse.pathExists(userPath + 'CardID.txt')
+  if (exists === false) {
+    await copyData(false, false, true)
+  } else {
+    card = fs.readFileSync(userPath + 'CardID.txt', 'utf8')
   }
 
   let discStreeam = fs.createReadStream(userPath + gameDiscInfoFolder + gameFileDiscStock, 'utf16le')
@@ -135,11 +143,12 @@ const readData = async () => {
   settings.vsync = config.setting.vsync
   settings.sfx_volume = config.setting.sfx_volume
   settings.bgm_volume = config.setting.bgm_volume
+  settings.card = card
 
-  return { songs, stage, settings, defaultSongs, defaultStage }
+  return { songs, stage, settings, defaultSongs, defaultStage, card }
 }
 
-const copyData = async (disc, stage) => {
+const copyData = async (disc, stage, card) => {
   // rename pak to enable custom songs feature
   let exists = await fse.pathExists(userPath + gamePakDiscInfoPak)
   if (exists === true) {
@@ -305,6 +314,14 @@ const copyData = async (disc, stage) => {
       }
       writeStream.end()
     }
+  }
+
+  if (card) {
+    let filepath = path.join(__static, 'patch/CardID.txt')
+    await fse.copy(filepath, userPath + 'CardID.txt', { overwrite: false })
+
+    filepath = path.join(__static, 'patch/CRT_R1.dll')
+    await fse.copy(filepath, userPath + 'CRT_R1.dll', { overwrite: true })
   }
 }
 
@@ -604,6 +621,8 @@ const saveGames = async (data) => {
   config.setting.sfx_volume = data.sfx_volume
   config.setting.bgm_volume = data.bgm_volume
   fs.writeFileSync(userPath + gameConfig, ini.stringify(config))
+
+  await fs.writeFileSync(userPath + 'CardID.txt', data.card)
 }
 
 const delSongs = async (songNo) => {
@@ -740,7 +759,7 @@ server.post('/saveSettings', async (req, res) => {
   const valid = await validPath(datapath)
   if (valid === true) {
     userPath = datapath
-    await copyData(false, false)
+    await copyData(false, false, false)
     success = true
   } else {
     userPath = ''
@@ -771,7 +790,7 @@ server.post('/saveSlot', async (req, res) => {
 server.get('/resetStage', async (req, res) => {
   const exist = await validPath(userPath)
   if (exist) {
-    await copyData(false, true)
+    await copyData(false, true, false)
     res.json({ success: true, msg: '' })
   } else {
     userPath = ''
@@ -782,7 +801,7 @@ server.get('/resetStage', async (req, res) => {
 server.get('/resetSongs', async (req, res) => {
   const exist = await validPath(userPath)
   if (exist) {
-    await copyData(true, true)
+    await copyData(true, true, false)
     res.json({ success: true, msg: '' })
   } else {
     userPath = ''

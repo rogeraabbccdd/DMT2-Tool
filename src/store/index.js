@@ -14,7 +14,8 @@ export default new Vuex.Store({
       show_cursor: false,
       vsync: false,
       sfx_volume: 127,
-      bgm_volume: 127
+      bgm_volume: 127,
+      card: '12345678ABCDEFGHIJKL'
     },
     songs: [],
     stages: [],
