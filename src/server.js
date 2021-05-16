@@ -818,7 +818,7 @@ server.post('/saveGame', async (req, res) => {
 })
 
 server.get('/play', async (req, res) => {
-  if (req.query.server && req.query.server === '1') exec(`start cmd.exe /c "${userPath}Client.exe" 127.0.0.1:8013`)
+  if (req.query.server && req.query.server === '1') exec(`start cmd.exe /c "${userPath}Client.exe" 127.0.0.1:8012`)
   else exec(`start cmd.exe /c "${userPath}Client.exe"`)
   res.send('')
 })
