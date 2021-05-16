@@ -44,11 +44,16 @@
               v-icon settings
             v-list-item-content
               v-list-item-title Settings
-          v-list-item(@click="play()" v-if="songs.length > 0")
+          v-list-item(@click="play(0)" v-if="songs.length > 0")
             v-list-item-action
               v-icon play_arrow
             v-list-item-content
               v-list-item-title Start Game
+          v-list-item(@click="play(1)" v-if="songs.length > 0")
+            v-list-item-action
+              v-icon play_arrow
+            v-list-item-content
+              v-list-item-title Start Game (Local Server)
           v-list-item(@click="openFolder()" v-if="songs.length > 0")
             v-list-item-action
               v-icon folder
@@ -115,8 +120,8 @@ export default {
           this.overlay = false
         })
     },
-    play () {
-      this.axios.get('http://localhost:616/play')
+    play (server) {
+      this.axios.get('http://localhost:616/play?server=' + server)
     },
     openFolder () {
       this.axios.get('http://localhost:616/folder')

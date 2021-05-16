@@ -9,11 +9,9 @@ import fse from 'fs-extra'
 import { once } from 'events'
 import path from 'path'
 import ini from 'ini'
-import childProcess from 'child_process'
+import { exec } from 'child_process'
 import { shell } from 'electron'
 import chmodr from 'chmodr'
-
-const exec = childProcess.execFile
 
 const server = express()
 
@@ -820,7 +818,8 @@ server.post('/saveGame', async (req, res) => {
 })
 
 server.get('/play', async (req, res) => {
-  exec(userPath + 'Client.exe')
+  if (req.query.server && req.query.server === '1') exec(`start cmd.exe /c "${userPath}Client.exe" 127.0.0.1:8013`)
+  else exec(`start cmd.exe /c "${userPath}Client.exe"`)
   res.send('')
 })
 
