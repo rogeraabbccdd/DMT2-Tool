@@ -11,6 +11,7 @@ A tool to manage cracked DJMAX TECHNIKA 2
 4. Open Settings, set your game folder and save.
 5. You can edit your song solots in stages.
 6. If you got **opreation not permitted** error when edit song slots, make sure your `<star/pop>_stage_<num>.csv` is not readonly.
+7. **Start Game (Local Server)** requires an local server, you have to download it from somewhere else.
 
 ## Build
 1. Download repository.
